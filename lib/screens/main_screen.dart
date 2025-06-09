@@ -1,4 +1,5 @@
 import 'package:cashilo/screens/dashboard.dart';
+import 'package:cashilo/screens/transaction.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -13,7 +14,7 @@ class _MainScreenState extends State<MainScreen> {
 
   static const List<Widget> _pages = <Widget>[
     Center(child: DashboardScreen()),
-    Center(child: Text('Transactions', style: TextStyle(fontSize: 24))),
+    Center(child: TransactionsPage()),
     Center(child: Text('My Goals', style: TextStyle(fontSize: 24))),
     Center(child: Text('Reports', style: TextStyle(fontSize: 24))),
     Center(child: Text('Settings', style: TextStyle(fontSize: 24))),
