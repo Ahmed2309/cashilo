@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'screens/main_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  // Register adapters here if you have any (e.g., Hive.registerAdapter(TransactionModelAdapter()))
   runApp(const MyApp());
 }
 
