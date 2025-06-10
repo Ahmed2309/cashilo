@@ -1,5 +1,5 @@
+import 'package:cashilo/widgets/transaction/add_transaction_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive/hive.dart';
 import '../../../models/transaction_model.dart';
 import 'transation_tile_t.dart';
@@ -32,42 +32,51 @@ class TransactionList extends StatelessWidget {
       itemCount: transactions.length,
       itemBuilder: (context, index) {
         final tx = transactions[index];
-        return Slidable(
-          key: ValueKey(tx.id),
-          startActionPane: ActionPane(
-            motion: const DrawerMotion(),
-            children: [
-              SlidableAction(
-                onPressed: (context) {
-                  // TODO: Edit transaction
-                },
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-                icon: Icons.edit,
-                label: 'Edit',
-              ),
-            ],
-          ),
-          endActionPane: ActionPane(
-            motion: const DrawerMotion(),
-            children: [
-              SlidableAction(
-                onPressed: (context) {
-                  tx.delete();
-                },
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-                icon: Icons.delete,
-                label: 'Delete',
-              ),
-            ],
-          ),
-          child: TransactionTile(
-            date: tx.date,
-            category: tx.category,
-            note: tx.note,
-            amount: tx.amount,
-            type: tx.type,
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: ListTile(
+            leading: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.edit, color: Colors.blue),
+                  onPressed: () async {
+                    final updated = await showDialog<TransactionModel>(
+                      context: context,
+                      builder: (context) => AddTransactionDialog(
+                        transactionBox: tx.box as Box<TransactionModel>,
+                        // Optionally pass the existing transaction data for editing
+                        // You may need to update AddTransactionDialog to accept an existing transaction
+                        // and prefill the form fields.
+                      ),
+                    );
+                    if (updated != null) {
+                      tx.type = updated.type;
+                      tx.amount = updated.amount;
+                      tx.category = updated.category;
+                      tx.date = updated.date;
+                      tx.note = updated.note;
+                      tx.save();
+                    }
+                  },
+                  tooltip: 'Edit',
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  onPressed: () {
+                    tx.delete();
+                  },
+                  tooltip: 'Delete',
+                ),
+              ],
+            ),
+            title: TransactionTile(
+              date: tx.date,
+              category: tx.category,
+              note: tx.note,
+              amount: tx.amount,
+              type: tx.type,
+            ),
           ),
         );
       },

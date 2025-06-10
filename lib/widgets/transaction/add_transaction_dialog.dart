@@ -13,13 +13,28 @@ class AddTransactionDialog extends StatefulWidget {
 class _AddTransactionDialogState extends State<AddTransactionDialog> {
   final _formKey = GlobalKey<FormState>();
   String type = 'Income';
-  String category = '';
-  String note = '';
+  String category = 'Salary';
   double amount = 0;
   DateTime date = DateTime.now();
 
+  final List<String> incomeCategories = [
+    'Salary',
+    'Bonus',
+    'Investment',
+    'Other'
+  ];
+  final List<String> expenseCategories = [
+    'Food',
+    'Shopping',
+    'Bills',
+    'Transport',
+    'Other'
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final categories = type == 'Income' ? incomeCategories : expenseCategories;
+
     return AlertDialog(
       title: const Text('Add Transaction'),
       content: Form(
@@ -34,18 +49,26 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                   DropdownMenuItem(value: 'Income', child: Text('Income')),
                   DropdownMenuItem(value: 'Expense', child: Text('Expense')),
                 ],
-                onChanged: (val) => setState(() => type = val ?? 'Income'),
+                onChanged: (val) {
+                  setState(() {
+                    type = val ?? 'Income';
+                    category = (type == 'Income'
+                            ? incomeCategories
+                            : expenseCategories)
+                        .first;
+                  });
+                },
                 decoration: const InputDecoration(labelText: 'Type'),
               ),
-              TextFormField(
+              DropdownButtonFormField<String>(
+                value: category,
+                items: categories
+                    .map(
+                        (cat) => DropdownMenuItem(value: cat, child: Text(cat)))
+                    .toList(),
+                onChanged: (val) =>
+                    setState(() => category = val ?? categories.first),
                 decoration: const InputDecoration(labelText: 'Category'),
-                onChanged: (val) => category = val,
-                validator: (val) =>
-                    val == null || val.isEmpty ? 'Enter category' : null,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Note'),
-                onChanged: (val) => note = val,
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Amount'),
@@ -86,7 +109,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 amount: amount,
                 category: category,
                 date: date,
-                note: note,
+                note: '', // No note
               );
               widget.transactionBox.add(newTx);
               Navigator.pop(context);
