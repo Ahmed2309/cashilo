@@ -36,9 +36,9 @@ class TransactionTile extends StatelessWidget {
         subtitle: Text(
           '${DateFormat.yMMMd().format(date)}${note.isNotEmpty ? ' • $note' : ''}',
         ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               '${isIncome ? '+' : '-'}\$${amount.abs().toStringAsFixed(2)}',
@@ -48,14 +48,21 @@ class TransactionTile extends StatelessWidget {
                 fontSize: 16,
               ),
             ),
-            const SizedBox(height: 4),
-            Chip(
-              label: Text(type, style: TextStyle(fontSize: 12)),
-              backgroundColor: isIncome ? Colors.green[50] : Colors.red[50],
-              labelStyle:
-                  TextStyle(color: isIncome ? Colors.green : Colors.red),
-              visualDensity: VisualDensity.compact,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: isIncome ? Colors.green[50] : Colors.red[50],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                type,
+                style: TextStyle(
+                  color: isIncome ? Colors.green : Colors.red,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ],
         ),

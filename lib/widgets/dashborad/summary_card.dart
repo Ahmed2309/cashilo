@@ -17,7 +17,6 @@ class SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 140,
       margin: const EdgeInsets.only(right: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -25,17 +24,26 @@ class SummaryCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min, // Prevent overflow
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            backgroundColor: color.withOpacity(0.15),
-            child: Icon(icon, color: color),
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 24),
           ),
           const SizedBox(height: 12),
           Text(
             label,
-            style:
-                TextStyle(color: Colors.grey[700], fontWeight: FontWeight.w500),
+            style: TextStyle(
+              color: Colors.grey[700],
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
