@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../models/transaction_model.dart';
 import '../widgets/goals/goal_add_dialog.dart';
+import '../widgets/goals/edit_goal_dialog.dart';
 
 class GoalsScreen extends StatefulWidget {
   const GoalsScreen({super.key});
@@ -55,9 +56,9 @@ class _GoalsScreenState extends State<GoalsScreen>
   void _editGoal(Goal goal) {
     showDialog(
       context: context,
-      builder: (context) => GoalAddDialog(
-        // Prefill with existing goal data
-        onAdd: (name, amount, start, end, priority) {
+      builder: (context) => EditGoalDialog(
+        goal: goal,
+        onEdit: (name, amount, start, end, priority) {
           goal.name = name;
           goal.targetAmount = amount;
           goal.startDate = start;
@@ -153,9 +154,9 @@ class _GoalsScreenState extends State<GoalsScreen>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addGoal,
-        child: const Icon(Icons.add),
         backgroundColor: Colors.deepPurple,
         tooltip: 'Add Goal',
+        child: const Icon(Icons.add),
       ),
     );
   }

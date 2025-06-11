@@ -30,7 +30,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Color selectedColor = Colors.deepPurple;
+    const Color selectedColor = Colors.deepPurple;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cashilo'),

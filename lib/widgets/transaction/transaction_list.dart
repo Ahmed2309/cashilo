@@ -1,4 +1,4 @@
-import 'package:cashilo/widgets/transaction/add_transaction_dialog.dart';
+import 'package:cashilo/widgets/transaction/edit_transation_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../../../models/transaction_model.dart';
@@ -40,24 +40,18 @@ class TransactionList extends StatelessWidget {
               children: [
                 IconButton(
                   icon: const Icon(Icons.edit, color: Colors.blue),
-                  onPressed: () async {
-                    final updated = await showDialog<TransactionModel>(
+                  onPressed: () {
+                    final transactionBox =
+                        Hive.box<TransactionModel>('transactions');
+                    final key = transactionBox.keyAt(index);
+                    showDialog(
                       context: context,
-                      builder: (context) => AddTransactionDialog(
-                        transactionBox: tx.box as Box<TransactionModel>,
-                        // Optionally pass the existing transaction data for editing
-                        // You may need to update AddTransactionDialog to accept an existing transaction
-                        // and prefill the form fields.
+                      builder: (context) => EditTransactionDialog(
+                        transactionBox: transactionBox,
+                        transactionKey: key,
+                        transaction: tx,
                       ),
                     );
-                    if (updated != null) {
-                      tx.type = updated.type;
-                      tx.amount = updated.amount;
-                      tx.category = updated.category;
-                      tx.date = updated.date;
-                      tx.note = updated.note;
-                      tx.save();
-                    }
                   },
                   tooltip: 'Edit',
                 ),

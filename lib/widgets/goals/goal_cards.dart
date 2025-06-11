@@ -1,4 +1,5 @@
 import 'package:cashilo/models/goals_model.dart';
+import 'package:cashilo/widgets/goals/edit_goal_dialog.dart';
 import 'package:flutter/material.dart';
 
 class GoalCard extends StatelessWidget {

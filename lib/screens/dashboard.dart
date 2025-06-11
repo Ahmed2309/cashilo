@@ -2,7 +2,6 @@ import 'package:cashilo/models/goals_model.dart';
 import 'package:cashilo/models/transaction_model.dart';
 import 'package:cashilo/widgets/transaction/add_transaction_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import '../widgets/dashborad/summary_card.dart';
