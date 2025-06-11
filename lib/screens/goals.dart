@@ -37,14 +37,13 @@ class _GoalsScreenState extends State<GoalsScreen>
     showDialog(
       context: context,
       builder: (context) => GoalAddDialog(
-        onAdd: (name, amount, start, end, priority) {
+        onAdd: (name, amount, start, end) {
           final goal = Goal(
             name: name,
             targetAmount: amount,
             savedAmount: 0,
             startDate: start,
             endDate: end,
-            priority: priority,
           );
           goalBox.add(goal);
           setState(() {});
@@ -58,12 +57,11 @@ class _GoalsScreenState extends State<GoalsScreen>
       context: context,
       builder: (context) => EditGoalDialog(
         goal: goal,
-        onEdit: (name, amount, start, end, priority) {
+        onEdit: (name, amount, start, end) {
           goal.name = name;
           goal.targetAmount = amount;
           goal.startDate = start;
           goal.endDate = end;
-          goal.priority = priority;
           goal.save();
           setState(() {});
         },
@@ -98,12 +96,10 @@ class _GoalsScreenState extends State<GoalsScreen>
         .fold<double>(0, (sum, tx) => sum + tx.amount);
     final availableSavings = totalIncome - totalExpenses;
 
-    // Distribute savings to uncompleted goals by priority
     _calculateGoalSavings(activeGoals, availableSavings);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Goals'),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -120,20 +116,48 @@ class _GoalsScreenState extends State<GoalsScreen>
                 controller: _tabController,
                 children: [
                   // Active Goals Tab
-                  ListView(
+                  Column(
                     children: [
-                      ...activeGoals.map((goal) => GoalCard(
-                            goal: goal,
-                            onAdd: null,
-                            completed: false,
-                            onStopChanged: (val) {
-                              goal.stopped = val ?? false;
-                              goal.save();
-                              setState(() {});
-                            },
-                            onEdit: () => _editGoal(goal),
-                            onDelete: () => _deleteGoal(goal),
-                          )),
+                      Expanded(
+                        child: ListView(
+                          children: [
+                            ...activeGoals.map((goal) => GoalCard(
+                                  goal: goal,
+                                  onAdd: null,
+                                  completed: false,
+                                  onStopChanged: (val) {
+                                    if (val == true && !goal.stopped) {
+                                      // User stopped the goal manually
+                                      if (goal.savedAmount > 0) {
+                                        transactionBox.add(TransactionModel(
+                                          id: DateTime.now()
+                                              .millisecondsSinceEpoch
+                                              .toString(),
+                                          type: 'Income',
+                                          amount: goal.savedAmount,
+                                          category: 'From Saving',
+                                          date: DateTime.now(),
+                                          note: 'Stopped goal: ${goal.name}',
+                                        ));
+                                        goal.savedAmount = 0;
+                                      }
+                                      goal.stopped = true;
+                                      goal.save();
+                                      setState(() {});
+                                    } else if (val == false && goal.stopped) {
+                                      // User re-activated the goal (optional: reset progress)
+                                      goal.stopped = false;
+                                      goal.savedAmount = 0;
+                                      goal.save();
+                                      setState(() {});
+                                    }
+                                  },
+                                  onEdit: () => _editGoal(goal),
+                                  onDelete: () => _deleteGoal(goal),
+                                )),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                   // Stopped/Completed Goals Tab
@@ -146,6 +170,22 @@ class _GoalsScreenState extends State<GoalsScreen>
                             onStopChanged: null,
                             onEdit: () => _editGoal(goal),
                             onDelete: () => _deleteGoal(goal),
+                            // Add this:
+                            trailing: (goal.stopped &&
+                                    goal.savedAmount < goal.targetAmount)
+                                ? IconButton(
+                                    icon: const Icon(Icons.refresh,
+                                        color: Colors.green),
+                                    tooltip: 'Reactivate (reset progress)',
+                                    onPressed: () {
+                                      setState(() {
+                                        goal.stopped = false;
+                                        goal.savedAmount = 0;
+                                        goal.save();
+                                      });
+                                    },
+                                  )
+                                : null,
                           )),
                     ],
                   ),
@@ -161,37 +201,78 @@ class _GoalsScreenState extends State<GoalsScreen>
     );
   }
 
-  /// Only allocate to uncompleted goals, sorted by priority
-  List<Goal> _calculateGoalSavings(List<Goal> goals, double availableSavings) {
-    const priorities = ['High', 'Medium', 'Low'];
-    List<Goal> sortedGoals = [];
-    for (final p in priorities) {
-      sortedGoals.addAll(goals.where((g) => g.priority == p));
+  void _calculateGoalSavings(List<Goal> goals, double availableSavings) {
+    // Step 1: Calculate each goal's monthly portion
+    List<double> monthlyPortions = [];
+    double totalMonthlyPortion = 0.0;
+
+    for (final g in goals) {
+      double monthlyPortion = 0.0;
+      if (g.startDate != null && g.endDate != null) {
+        final days = g.endDate!.difference(g.startDate!).inDays;
+        if (days <= 8) {
+          monthlyPortion = g.targetAmount * 4.345;
+        } else if (days <= 32) {
+          monthlyPortion = g.targetAmount;
+        } else if (days <= 95) {
+          monthlyPortion = g.targetAmount / 3.0;
+        } else if (days <= 190) {
+          monthlyPortion = g.targetAmount / 6.0;
+        } else {
+          monthlyPortion = g.targetAmount / 12.0;
+        }
+      } else {
+        monthlyPortion = g.targetAmount;
+      }
+      monthlyPortions.add(monthlyPortion);
+      totalMonthlyPortion += monthlyPortion;
     }
 
-    double remaining = availableSavings;
-    List<Goal> updatedGoals = [];
-    for (final goal in sortedGoals) {
-      final needed = goal.targetAmount;
-      final allocated = remaining >= needed ? needed : remaining;
-      updatedGoals.add(
-        Goal(
-          name: goal.name,
-          targetAmount: goal.targetAmount,
-          savedAmount: allocated > 0 ? allocated : 0,
-          startDate: goal.startDate,
-          endDate: goal.endDate,
-          priority: goal.priority,
-        ),
-      );
-      remaining -= allocated;
-      if (remaining <= 0) break;
+    // Step 2: Distribute available savings proportionally and update Hive
+    double remainingSavings = availableSavings;
+    for (int i = 0; i < goals.length; i++) {
+      final goal = goals[i];
+      final portion = monthlyPortions[i];
+      double allocated = 0.0;
+      if (totalMonthlyPortion > 0) {
+        allocated = (portion / totalMonthlyPortion) * availableSavings;
+        // Don't allocate more than the goal needs this month or the remaining savings
+        allocated = allocated
+            .clamp(0, portion)
+            .clamp(0, goal.targetAmount - goal.savedAmount)
+            .clamp(0, remainingSavings) as double;
+      }
+      if (allocated > 0) {
+        goal.savedAmount += allocated;
+        goal.save();
+
+        transactionBox.add(TransactionModel(
+          id: DateTime.now().millisecondsSinceEpoch.toString() + i.toString(),
+          type: 'Expense',
+          amount: allocated,
+          category: 'Saving',
+          date: DateTime.now(),
+          note: 'Auto-save for goal: ${goal.name}',
+        ));
+
+        // If goal is now completed, create an expense for using the saving
+        if (goal.savedAmount >= goal.targetAmount) {
+          transactionBox.add(TransactionModel(
+            id: (DateTime.now().millisecondsSinceEpoch + 1000 + i).toString(),
+            type: 'Expense',
+            amount: goal.savedAmount,
+            category: 'Saving Used',
+            date: DateTime.now(),
+            note: 'Goal completed: ${goal.name}',
+          ));
+          // Optionally reset savedAmount if you want to clear it after use
+          // goal.savedAmount = 0;
+          // goal.save();
+        }
+
+        remainingSavings -= allocated;
+        if (remainingSavings <= 0) break;
+      }
     }
-    // Add any goals that didn't get savings (if any)
-    if (updatedGoals.length < goals.length) {
-      updatedGoals.addAll(
-          goals.where((g) => !updatedGoals.any((ug) => ug.name == g.name)));
-    }
-    return updatedGoals;
   }
 }

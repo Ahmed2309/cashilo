@@ -3,8 +3,12 @@ import 'package:cashilo/models/goals_model.dart';
 
 class EditGoalDialog extends StatefulWidget {
   final Goal goal;
-  final void Function(String name, double amount, DateTime? start,
-      DateTime? end, String priority) onEdit;
+  final void Function(
+    String name,
+    double amount,
+    DateTime? start,
+    DateTime? end,
+  ) onEdit;
 
   const EditGoalDialog({
     super.key,
@@ -19,7 +23,6 @@ class EditGoalDialog extends StatefulWidget {
 class _EditGoalDialogState extends State<EditGoalDialog> {
   late TextEditingController _nameController;
   late TextEditingController _amountController;
-  late String _priority;
   late String _period;
 
   static const List<String> periods = [
@@ -35,7 +38,7 @@ class _EditGoalDialogState extends State<EditGoalDialog> {
     _nameController = TextEditingController(text: widget.goal.name);
     _amountController =
         TextEditingController(text: widget.goal.targetAmount.toString());
-    _priority = widget.goal.priority;
+
     _period = _getPeriodFromDates(widget.goal.startDate, widget.goal.endDate) ??
         '1 Month';
   }
@@ -99,16 +102,6 @@ class _EditGoalDialogState extends State<EditGoalDialog> {
               decoration: const InputDecoration(labelText: 'Period'),
             ),
             const SizedBox(height: 8),
-            DropdownButtonFormField<String>(
-              value: _priority,
-              items: const [
-                DropdownMenuItem(value: 'Low', child: Text('Low')),
-                DropdownMenuItem(value: 'Medium', child: Text('Medium')),
-                DropdownMenuItem(value: 'High', child: Text('High')),
-              ],
-              onChanged: (val) => setState(() => _priority = val ?? 'Medium'),
-              decoration: const InputDecoration(labelText: 'Priority'),
-            ),
           ],
         ),
       ),
@@ -123,13 +116,8 @@ class _EditGoalDialogState extends State<EditGoalDialog> {
                 _amountController.text.isNotEmpty) {
               final now = DateTime.now();
               final endDate = _calculateEndDate(_period);
-              widget.onEdit(
-                _nameController.text,
-                double.tryParse(_amountController.text) ?? 0,
-                now,
-                endDate,
-                _priority,
-              );
+              widget.onEdit(_nameController.text,
+                  double.tryParse(_amountController.text) ?? 0, now, endDate);
               Navigator.pop(context);
             }
           },

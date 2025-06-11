@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class GoalAddDialog extends StatefulWidget {
-  final void Function(String name, double amount, DateTime? start,
-      DateTime? end, String priority) onAdd;
+  final void Function(
+      String name, double amount, DateTime? start, DateTime? end) onAdd;
 
   const GoalAddDialog({super.key, required this.onAdd});
 
@@ -13,7 +13,6 @@ class GoalAddDialog extends StatefulWidget {
 class _GoalAddDialogState extends State<GoalAddDialog> {
   final _nameController = TextEditingController();
   final _amountController = TextEditingController();
-  String _priority = 'Medium';
   String _period = '1 Month';
 
   static const List<String> periods = [
@@ -73,16 +72,6 @@ class _GoalAddDialogState extends State<GoalAddDialog> {
               decoration: const InputDecoration(labelText: 'Period'),
             ),
             const SizedBox(height: 8),
-            DropdownButtonFormField<String>(
-              value: _priority,
-              items: const [
-                DropdownMenuItem(value: 'Low', child: Text('Low')),
-                DropdownMenuItem(value: 'Medium', child: Text('Medium')),
-                DropdownMenuItem(value: 'High', child: Text('High')),
-              ],
-              onChanged: (val) => setState(() => _priority = val ?? 'Medium'),
-              decoration: const InputDecoration(labelText: 'Priority'),
-            ),
           ],
         ),
       ),
@@ -102,7 +91,6 @@ class _GoalAddDialogState extends State<GoalAddDialog> {
                 double.tryParse(_amountController.text) ?? 0,
                 now,
                 endDate,
-                _priority,
               );
               Navigator.pop(context);
             }

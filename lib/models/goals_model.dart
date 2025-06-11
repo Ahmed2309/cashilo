@@ -19,11 +19,12 @@ class Goal extends HiveObject {
   @HiveField(4)
   DateTime? endDate;
 
-  @HiveField(5)
-  String priority; // 'Low', 'Medium', 'High'
-
   @HiveField(6)
   bool stopped; // Add this field
+
+  // Add a weight field or getter. Adjust the logic as needed.
+  double get weight =>
+      targetAmount - savedAmount > 0 ? targetAmount - savedAmount : 1;
 
   Goal({
     required this.name,
@@ -31,7 +32,6 @@ class Goal extends HiveObject {
     required this.savedAmount,
     this.startDate,
     this.endDate,
-    required this.priority,
     this.stopped = false, // default to false
   });
 }

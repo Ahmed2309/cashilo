@@ -22,7 +22,7 @@ class GoalAdapter extends TypeAdapter<Goal> {
       savedAmount: fields[2] as double,
       startDate: fields[3] as DateTime?,
       endDate: fields[4] as DateTime?,
-      priority: fields[5] as String,
+      stopped: fields[6] as bool,
     );
   }
 
@@ -40,8 +40,8 @@ class GoalAdapter extends TypeAdapter<Goal> {
       ..write(obj.startDate)
       ..writeByte(4)
       ..write(obj.endDate)
-      ..writeByte(5)
-      ..write(obj.priority);
+      ..writeByte(6)
+      ..write(obj.stopped);
   }
 
   @override
