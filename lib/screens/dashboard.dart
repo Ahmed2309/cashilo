@@ -18,6 +18,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   bool showAll = false;
+  bool _alertDismissed = false; // <-- Add this flag
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +75,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
           final monthlyGoalReached = savingProgress >= 1.0;
 
-          // Only show alert if the monthly goal is NOT already reached
-          if (!monthlyGoalReached &&
-              availableSavings >= monthlySavingGoal &&
+          // Calculate balance before using it
+          final balance = totalIncome - totalExpenses;
+
+          // Only show alert if the monthly goal is NOT already reached and balance can cover it
+          if (!_alertDismissed &&
+              !monthlyGoalReached &&
+              balance >= monthlySavingGoal &&
               monthlySavingGoal > 0) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (!mounted) return;
@@ -85,18 +90,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 builder: (context) => AlertDialog(
                   title: const Text('Monthly Saving Goal'),
                   content: Text(
-                    'Your balance (\$${availableSavings.toStringAsFixed(2)}) is enough to cover your monthly saving goal (\$${monthlySavingGoal.toStringAsFixed(2)}).\n\nDo you want to move this amount to your savings goals now?',
+                    'Your balance (\$${balance.toStringAsFixed(2)}) is enough to cover your monthly saving goal (\$${monthlySavingGoal.toStringAsFixed(2)}).\n\nDo you want to move this amount to your savings goals now?',
                   ),
                   actions: [
                     TextButton(
-                      onPressed: () => Navigator.pop(context), // Do nothing
+                      onPressed: () {
+                        setState(() {
+                          _alertDismissed =
+                              true; // <-- Set flag so alert won't show again
+                        });
+                        Navigator.pop(context);
+                      },
                       child: const Text('Cancel'),
                     ),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        _calculateGoalSavings(activeGoals, availableSavings);
-                        setState(() {});
+                        _calculateGoalSavings(activeGoals, monthlySavingGoal);
+                        setState(() {
+                          _alertDismissed =
+                              true; // <-- Also set flag on approve
+                        });
                       },
                       child: const Text('Approve'),
                     ),
@@ -231,7 +245,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               .where((tx) => tx.type.toLowerCase() == 'expense')
                               .fold<double>(0, (sum, tx) => sum + tx.amount);
                           final balance = totalIncome - totalExpenses;
-                          final availableSavings = balance;
 
                           showDialog(
                             context: context,

@@ -1,5 +1,7 @@
 import 'package:cashilo/screens/dashboard.dart';
 import 'package:cashilo/screens/goals.dart';
+import 'package:cashilo/screens/reports.dart';
+import 'package:cashilo/screens/settings.dart';
 import 'package:cashilo/screens/transaction.dart';
 import 'package:flutter/material.dart';
 
@@ -17,8 +19,8 @@ class _MainScreenState extends State<MainScreen> {
     Center(child: DashboardScreen()),
     Center(child: TransactionsPage()),
     Center(child: GoalsScreen()),
-    Center(child: Text('Reports', style: TextStyle(fontSize: 24))),
-    Center(child: Text('Settings', style: TextStyle(fontSize: 24))),
+    Center(child: ReportsScreen()),
+    Center(child: SettingsScreen()),
   ];
 
   void _onDrawerItemTapped(int index) {

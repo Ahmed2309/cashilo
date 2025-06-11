@@ -96,8 +96,6 @@ class _GoalsScreenState extends State<GoalsScreen>
         .fold<double>(0, (sum, tx) => sum + tx.amount);
     final availableSavings = totalIncome - totalExpenses;
 
-    _calculateGoalSavings(activeGoals, availableSavings);
-
     return Scaffold(
       appBar: AppBar(
         bottom: TabBar(
@@ -199,80 +197,5 @@ class _GoalsScreenState extends State<GoalsScreen>
         child: const Icon(Icons.add),
       ),
     );
-  }
-
-  void _calculateGoalSavings(List<Goal> goals, double availableSavings) {
-    // Step 1: Calculate each goal's monthly portion
-    List<double> monthlyPortions = [];
-    double totalMonthlyPortion = 0.0;
-
-    for (final g in goals) {
-      double monthlyPortion = 0.0;
-      if (g.startDate != null && g.endDate != null) {
-        final days = g.endDate!.difference(g.startDate!).inDays;
-        if (days <= 8) {
-          monthlyPortion = g.targetAmount * 4.345;
-        } else if (days <= 32) {
-          monthlyPortion = g.targetAmount;
-        } else if (days <= 95) {
-          monthlyPortion = g.targetAmount / 3.0;
-        } else if (days <= 190) {
-          monthlyPortion = g.targetAmount / 6.0;
-        } else {
-          monthlyPortion = g.targetAmount / 12.0;
-        }
-      } else {
-        monthlyPortion = g.targetAmount;
-      }
-      monthlyPortions.add(monthlyPortion);
-      totalMonthlyPortion += monthlyPortion;
-    }
-
-    // Step 2: Distribute available savings proportionally and update Hive
-    double remainingSavings = availableSavings;
-    for (int i = 0; i < goals.length; i++) {
-      final goal = goals[i];
-      final portion = monthlyPortions[i];
-      double allocated = 0.0;
-      if (totalMonthlyPortion > 0) {
-        allocated = (portion / totalMonthlyPortion) * availableSavings;
-        // Don't allocate more than the goal needs this month or the remaining savings
-        allocated = allocated
-            .clamp(0, portion)
-            .clamp(0, goal.targetAmount - goal.savedAmount)
-            .clamp(0, remainingSavings) as double;
-      }
-      if (allocated > 0) {
-        goal.savedAmount += allocated;
-        goal.save();
-
-        transactionBox.add(TransactionModel(
-          id: DateTime.now().millisecondsSinceEpoch.toString() + i.toString(),
-          type: 'Expense',
-          amount: allocated,
-          category: 'Saving',
-          date: DateTime.now(),
-          note: 'Auto-save for goal: ${goal.name}',
-        ));
-
-        // If goal is now completed, create an expense for using the saving
-        if (goal.savedAmount >= goal.targetAmount) {
-          transactionBox.add(TransactionModel(
-            id: (DateTime.now().millisecondsSinceEpoch + 1000 + i).toString(),
-            type: 'Expense',
-            amount: goal.savedAmount,
-            category: 'Saving Used',
-            date: DateTime.now(),
-            note: 'Goal completed: ${goal.name}',
-          ));
-          // Optionally reset savedAmount if you want to clear it after use
-          // goal.savedAmount = 0;
-          // goal.save();
-        }
-
-        remainingSavings -= allocated;
-        if (remainingSavings <= 0) break;
-      }
-    }
   }
 }
