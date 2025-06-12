@@ -70,6 +70,16 @@ class _GoalsScreenState extends State<GoalsScreen>
   }
 
   void _deleteGoal(Goal goal) async {
+    if (goal.savedAmount > 0) {
+      transactionBox.add(TransactionModel(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        type: 'Income',
+        amount: goal.savedAmount,
+        category: 'From Saving',
+        date: DateTime.now(),
+        note: 'Goal deleted: ${goal.name}',
+      ));
+    }
     await goal.delete();
     setState(() {});
   }

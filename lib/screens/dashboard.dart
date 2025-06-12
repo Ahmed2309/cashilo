@@ -72,8 +72,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
           final availableSavings = savings - savingProgress * savingGoal;
           final monthlySavingGoal = getTotalPeriodSavingGoal();
-
-          final monthlyGoalReached = savingProgress >= 1.0;
+          final remainingToCover =
+              (monthlySavingGoal - savings).clamp(0, monthlySavingGoal);
+          final monthlyGoalReached = remainingToCover == 0;
 
           // Calculate balance before using it
           final balance = totalIncome - totalExpenses;
@@ -81,8 +82,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           // Only show alert if the monthly goal is NOT already reached and balance can cover it
           if (!_alertDismissed &&
               !monthlyGoalReached &&
-              balance >= monthlySavingGoal &&
-              monthlySavingGoal > 0) {
+              balance >= remainingToCover &&
+              remainingToCover > 0) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (!mounted) return;
               showDialog(
@@ -90,14 +91,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 builder: (context) => AlertDialog(
                   title: const Text('Monthly Saving Goal'),
                   content: Text(
-                    'Your balance (\$${balance.toStringAsFixed(2)}) is enough to cover your monthly saving goal (\$${monthlySavingGoal.toStringAsFixed(2)}).\n\nDo you want to move this amount to your savings goals now?',
+                    'Your balance (\$${balance.toStringAsFixed(2)}) is enough to cover the remaining monthly saving goal (\$${remainingToCover.toStringAsFixed(2)}).\n\nDo you want to move this amount to your savings goals now?',
                   ),
                   actions: [
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          _alertDismissed =
-                              true; // <-- Set flag so alert won't show again
+                          _alertDismissed = true;
                         });
                         Navigator.pop(context);
                       },
@@ -106,10 +106,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        _calculateGoalSavings(activeGoals, monthlySavingGoal);
+                        _calculateGoalSavings(
+                            activeGoals, remainingToCover.toDouble());
                         setState(() {
-                          _alertDismissed =
-                              true; // <-- Also set flag on approve
+                          _alertDismissed = true;
                         });
                       },
                       child: const Text('Approve'),
