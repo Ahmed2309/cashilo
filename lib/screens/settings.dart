@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cashilo/models/goals_model.dart';
 import 'package:cashilo/models/transaction_model.dart';
 import 'package:hive/hive.dart';
+import 'package:cashilo/widgets/settings/language_selector.dart';
+import 'package:cashilo/widgets/settings/currency_selector.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -14,6 +16,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool notificationsEnabled = true;
   bool darkMode = false;
 
+  String selectedLanguage = 'English';
+  String selectedCurrency = 'USD';
+
+  final List<String> languages = ['English', 'Arabic', 'French'];
+  final List<String> currencies = ['USD', 'EUR', 'SAR', 'EGP'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +31,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         children: [
           const SizedBox(height: 16),
+          LanguageSelector(
+            selectedLanguage: selectedLanguage,
+            languages: languages,
+            onChanged: (val) {
+              setState(() {
+                selectedLanguage = val;
+              });
+              // TODO: Apply language change in the app
+            },
+          ),
+          CurrencySelector(
+            selectedCurrency: selectedCurrency,
+            currencies: currencies,
+            onChanged: (val) {
+              setState(() {
+                selectedCurrency = val;
+              });
+              // TODO: Apply currency change in the app
+            },
+          ),
+          const Divider(),
           ListTile(
             leading: const Icon(Icons.notifications),
             title: const Text('Enable Notifications'),

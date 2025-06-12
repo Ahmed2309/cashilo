@@ -96,16 +96,6 @@ class _GoalsScreenState extends State<GoalsScreen>
         .where((g) => g.stopped || g.savedAmount >= g.targetAmount)
         .toList();
 
-    // Calculate total income and expenses
-    final transactions = transactionBox.values.toList();
-    final totalIncome = transactions
-        .where((tx) => tx.type.toLowerCase() == 'income')
-        .fold<double>(0, (sum, tx) => sum + tx.amount);
-    final totalExpenses = transactions
-        .where((tx) => tx.type.toLowerCase() == 'expense')
-        .fold<double>(0, (sum, tx) => sum + tx.amount);
-    final availableSavings = totalIncome - totalExpenses;
-
     return Scaffold(
       appBar: AppBar(
         bottom: TabBar(
@@ -178,7 +168,6 @@ class _GoalsScreenState extends State<GoalsScreen>
                             onStopChanged: null,
                             onEdit: () => _editGoal(goal),
                             onDelete: () => _deleteGoal(goal),
-                            // Add this:
                             trailing: (goal.stopped &&
                                     goal.savedAmount < goal.targetAmount)
                                 ? IconButton(
