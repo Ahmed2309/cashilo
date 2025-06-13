@@ -45,12 +45,33 @@ class ReportsBarChart extends StatelessWidget {
                         if (value < 0 || value >= sortedMonths.length) {
                           return const SizedBox.shrink();
                         }
-                        final month = sortedMonths[value.toInt()];
+                        final raw = sortedMonths[value.toInt()];
+                        String label;
+                        try {
+                          if (RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(raw)) {
+                            // yyyy-MM-dd
+                            label =
+                                DateFormat('d MMM').format(DateTime.parse(raw));
+                          } else if (RegExp(r'^\d{4}-\d{2}$').hasMatch(raw)) {
+                            // yyyy-MM
+                            label = DateFormat('MMM')
+                                .format(DateTime.parse('$raw-01'));
+                          } else if (RegExp(r'^\d{2}$').hasMatch(raw)) {
+                            // hour
+                            label = '$raw:00';
+                          } else if (RegExp(r'^[A-Za-z]{3}$').hasMatch(raw)) {
+                            // weekday short
+                            label = raw;
+                          } else {
+                            label = raw;
+                          }
+                        } catch (e) {
+                          label = raw;
+                        }
                         return Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            DateFormat('MMM')
-                                .format(DateTime.parse('$month-01')),
+                            label,
                             style: const TextStyle(
                               color: AppColors.primary,
                               fontWeight: FontWeight.bold,
@@ -61,23 +82,23 @@ class ReportsBarChart extends StatelessWidget {
                       },
                     ),
                   ),
-                  rightTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
                 ),
                 gridData: FlGridData(
                   show: true,
                   drawVerticalLine: false,
                   horizontalInterval: 1,
-                  getDrawingHorizontalLine: (value) => FlLine(
+                  getDrawingHorizontalLine: (value) => const FlLine(
                     color: AppColors.card,
                     strokeWidth: 1,
                   ),
                 ),
                 borderData: FlBorderData(
                   show: true,
-                  border: Border(
+                  border: const Border(
                     left: BorderSide(color: AppColors.card, width: 1),
                     bottom: BorderSide(color: AppColors.card, width: 1),
                   ),

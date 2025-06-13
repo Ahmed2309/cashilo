@@ -44,14 +44,14 @@ class TransactionTile extends StatelessWidget {
         ),
         title: Text(
           category,
-          style: TextStyle(
+          style: const TextStyle(
             color: AppColors.headline,
             fontWeight: FontWeight.w600,
           ),
         ),
         subtitle: Text(
           '${DateFormat.yMMMd().format(date)}${note.isNotEmpty ? ' • $note' : ''}',
-          style: TextStyle(color: AppColors.primaryText, fontSize: 13),
+          style: const TextStyle(color: AppColors.primaryText, fontSize: 13),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,

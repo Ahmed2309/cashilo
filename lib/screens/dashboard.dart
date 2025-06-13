@@ -35,19 +35,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
         builder: (context, Box<TransactionModel> box, _) {
           final transactions = box.values.toList();
 
-          // Calculate totals from Hive data
-          final totalIncome = transactions
+          // Filter only today's transactions
+          final today = DateTime.now();
+          final todayTransactions = transactions
+              .where((tx) =>
+                  tx.date.year == today.year &&
+                  tx.date.month == today.month &&
+                  tx.date.day == today.day)
+              .toList();
+
+          // Calculate totals from today's transactions
+          final totalIncome = todayTransactions
               .where((tx) => tx.type.toLowerCase() == 'income')
               .fold<double>(0, (sum, tx) => sum + tx.amount);
 
-          final totalExpenses = transactions
+          final totalExpenses = todayTransactions
               .where((tx) => tx.type.toLowerCase() == 'expense')
               .fold<double>(0, (sum, tx) => sum + tx.amount);
 
-          final savings = transactions
+          final savings = todayTransactions
                   .where((tx) => tx.category == 'Saving')
                   .fold<double>(0, (sum, tx) => sum + tx.amount) -
-              transactions
+              todayTransactions
                   .where((tx) => tx.category == 'From Saving')
                   .fold<double>(0, (sum, tx) => sum + tx.amount);
 
@@ -55,8 +64,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               savingGoal == 0 ? 0.0 : (savings / savingGoal).clamp(0, 1);
 
           // Recent transactions (latest 3)
-          final recentTransactions = List<TransactionModel>.from(transactions)
-            ..sort((a, b) => b.date.compareTo(a.date));
+          final recentTransactions =
+              List<TransactionModel>.from(todayTransactions)
+                ..sort((a, b) => b.date.compareTo(a.date));
           final recent = recentTransactions.take(3).toList();
 
           // Choose which transactions to show
@@ -215,7 +225,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   monthlyGoalReached
                       ? "Congratulations! You've reached your monthly saving goal (\$${savingGoal.toStringAsFixed(2)})."
                       : "You've saved ${(savingProgress * 100).toStringAsFixed(0)}% of your goal (\$${savings.toStringAsFixed(2)} / \$${savingGoal.toStringAsFixed(2)}).",
-                  style: TextStyle(color: AppColors.primaryText),
+                  style: const TextStyle(color: AppColors.primaryText),
                 ),
                 const SizedBox(height: 24),
 
@@ -247,7 +257,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         padding: EdgeInsets.symmetric(vertical: 16.0),
                         child: Center(
                           child: Text(
-                            'No transactions yet.',
+                            'No transactions today.',
                             style: TextStyle(
                               color: AppColors.primaryText,
                               fontSize: 16,

@@ -131,11 +131,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           const Divider(),
-          ListTile(
-            leading: const Icon(Icons.info_outline, color: AppColors.primary),
-            title: const Text('About',
-                style: TextStyle(color: AppColors.primaryText)),
-            subtitle: const Text(
+          const ListTile(
+            leading: Icon(Icons.info_outline, color: AppColors.primary),
+            title:
+                Text('About', style: TextStyle(color: AppColors.primaryText)),
+            subtitle: Text(
               'Cashilo v1.0\nA simple savings and goals tracker.',
               style: TextStyle(color: AppColors.primaryText),
             ),

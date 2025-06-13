@@ -32,7 +32,7 @@ class TransactionTile extends StatelessWidget {
         ),
         title: Text(
           transaction.category,
-          style: TextStyle(
+          style: const TextStyle(
             color: AppColors.headline,
             fontWeight: FontWeight.w600,
             overflow: TextOverflow.ellipsis,
@@ -42,7 +42,7 @@ class TransactionTile extends StatelessWidget {
         subtitle: Text(
           '${transaction.date.year}-${transaction.date.month.toString().padLeft(2, '0')}-${transaction.date.day.toString().padLeft(2, '0')}'
           '${transaction.note.isNotEmpty ? " • ${transaction.note}" : ""}',
-          style: TextStyle(color: AppColors.primaryText, fontSize: 13),
+          style: const TextStyle(color: AppColors.primaryText, fontSize: 13),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),

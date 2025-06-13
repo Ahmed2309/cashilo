@@ -52,9 +52,9 @@ class _WithdrawFromSavingDialogState extends State<WithdrawFromSavingDialog> {
                 if (withdrawFromAll) selectedGoal = null;
               });
             },
-            title: Text(
+            title: const Text(
               'Withdraw from all goals',
-              style: const TextStyle(color: AppColors.primaryText),
+              style: TextStyle(color: AppColors.primaryText),
             ),
             activeColor: AppColors.primary,
             controlAffinity: ListTileControlAffinity.leading,

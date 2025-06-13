@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../../../models/transaction_model.dart';
+import '../../../constant.dart';
 
 class AddTransactionDialog extends StatefulWidget {
   final Box<TransactionModel> transactionBox;
@@ -13,23 +14,9 @@ class AddTransactionDialog extends StatefulWidget {
 class _AddTransactionDialogState extends State<AddTransactionDialog> {
   final _formKey = GlobalKey<FormState>();
   String type = 'Income';
-  String category = 'Salary';
+  String category = incomeCategories.first;
   double amount = 0;
   DateTime date = DateTime.now();
-
-  final List<String> incomeCategories = [
-    'Salary',
-    'Bonus',
-    'Investment',
-    'Other'
-  ];
-  final List<String> expenseCategories = [
-    'Food',
-    'Shopping',
-    'Bills',
-    'Transport',
-    'Other'
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +108,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                       context: context,
                       initialDate: date,
                       firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
+                      lastDate: DateTime.now(), // Prevent future dates
                     );
                     if (picked != null) setState(() => date = picked);
                   },

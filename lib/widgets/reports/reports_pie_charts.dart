@@ -25,7 +25,7 @@ class ReportsPieChart extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
               title!,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.headline,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -75,7 +75,7 @@ class ReportsPieChart extends StatelessWidget {
                 const SizedBox(width: 6),
                 Text(
                   '${s.title.split('\n').first}$percent',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.primaryText,
                     fontSize: 13,
                     fontWeight: FontWeight.w500,

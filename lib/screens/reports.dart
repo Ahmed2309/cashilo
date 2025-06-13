@@ -8,7 +8,22 @@ import 'package:cashilo/widgets/reports/reports_bar_chart.dart';
 import 'package:cashilo/widgets/reports/monthly_breakdown_list.dart';
 import 'package:cashilo/constant.dart';
 
-enum ChartRange { day, week, month, sixMonth, year }
+enum ChartRange { today, lastWeek, lastMonth, lastSixMonth, lastYear }
+
+String chartRangeLabel(ChartRange range) {
+  switch (range) {
+    case ChartRange.today:
+      return 'Today';
+    case ChartRange.lastWeek:
+      return 'Last Week';
+    case ChartRange.lastMonth:
+      return 'Last Month';
+    case ChartRange.lastSixMonth:
+      return 'Last 6 Months';
+    case ChartRange.lastYear:
+      return 'Last Year';
+  }
+}
 
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key});
@@ -18,40 +33,41 @@ class ReportsScreen extends StatefulWidget {
 }
 
 class _ReportsScreenState extends State<ReportsScreen> {
-  ChartRange _selectedRange = ChartRange.month;
+  ChartRange _selectedRange = ChartRange.lastMonth;
 
   @override
   Widget build(BuildContext context) {
     final transactionBox = Hive.box<TransactionModel>('transactions');
-    final transactions = transactionBox.values.toList();
+    final allTransactions = transactionBox.values.toList();
 
-    // Filter transactions by selected range
+    // PIE CHART: Filter transactions by selected range
     DateTime now = DateTime.now();
     DateTime start;
     switch (_selectedRange) {
-      case ChartRange.day:
+      case ChartRange.today:
         start = DateTime(now.year, now.month, now.day);
         break;
-      case ChartRange.week:
-        start = now.subtract(Duration(days: now.weekday - 1));
+      case ChartRange.lastWeek:
+        start = now.subtract(const Duration(days: 7));
         break;
-      case ChartRange.month:
-        start = DateTime(now.year, now.month);
+      case ChartRange.lastMonth:
+        start = DateTime(now.year, now.month - 1, now.day);
         break;
-      case ChartRange.sixMonth:
-        start = DateTime(now.year, now.month - 5);
+      case ChartRange.lastSixMonth:
+        start = DateTime(now.year, now.month - 6, now.day);
         break;
-      case ChartRange.year:
-        start = DateTime(now.year);
+      case ChartRange.lastYear:
+        start = DateTime(now.year - 1, now.month, now.day);
         break;
     }
-    final filteredTransactions = transactions.where((tx) => tx.date.isAfter(start.subtract(const Duration(days: 1)))).toList();
+    final filteredTransactions = allTransactions
+        .where((tx) => tx.date.isAfter(start.subtract(const Duration(days: 1))))
+        .toList();
 
+    // PIE CHART DATA
     double totalIncome = 0;
     double totalExpense = 0;
     double totalSaving = 0;
-
-    // For income/expense breakdown by category
     final Map<String, double> incomeMap = {};
     final Map<String, double> expenseMap = {};
 
@@ -68,68 +84,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
       }
     }
 
-    // Group transactions by selected range
-    final Map<String, List<TransactionModel>> grouped;
-    List<String> sortedKeys;
-    if (_selectedRange == ChartRange.day) {
-      grouped = {};
-      for (final tx in filteredTransactions) {
-        final hour = DateFormat('HH').format(tx.date);
-        grouped.putIfAbsent(hour, () => []).add(tx);
-      }
-      sortedKeys = grouped.keys.toList()..sort();
-    } else if (_selectedRange == ChartRange.week) {
-      grouped = {};
-      for (final tx in filteredTransactions) {
-        final day = DateFormat('EEE').format(tx.date);
-        grouped.putIfAbsent(day, () => []).add(tx);
-      }
-      sortedKeys = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    } else if (_selectedRange == ChartRange.month || _selectedRange == ChartRange.sixMonth) {
-      grouped = {};
-      for (final tx in filteredTransactions) {
-        final day = DateFormat('yyyy-MM-dd').format(tx.date);
-        grouped.putIfAbsent(day, () => []).add(tx);
-      }
-      sortedKeys = grouped.keys.toList()..sort();
-    } else {
-      grouped = {};
-      for (final tx in filteredTransactions) {
-        final month = DateFormat('yyyy-MM').format(tx.date);
-        grouped.putIfAbsent(month, () => []).add(tx);
-      }
-      sortedKeys = grouped.keys.toList()..sort();
-    }
-
-    // Prepare data for bar chart
-    final barGroups = <BarChartGroupData>[];
-    int i = 0;
-    for (final key in sortedKeys) {
-      final txs = grouped[key] ?? [];
-      double groupIncome = 0;
-      double groupExpense = 0;
-      for (final tx in txs) {
-        if (tx.type.toLowerCase() == 'income') {
-          groupIncome += tx.amount;
-        } else if (tx.type.toLowerCase() == 'expense') {
-          groupExpense += tx.amount;
-        }
-      }
-      barGroups.add(
-        BarChartGroupData(
-          x: i,
-          barRods: [
-            BarChartRodData(
-                toY: groupIncome, color: AppColors.secondary, width: 8),
-            BarChartRodData(
-                toY: groupExpense, color: AppColors.error, width: 8),
-          ],
-        ),
-      );
-      i++;
-    }
-
-    // Pie chart for overall breakdown
     final hasPieData = totalIncome > 0 || totalExpense > 0 || totalSaving > 0;
     final mainPieSections = hasPieData
         ? buildMainPieSections(
@@ -171,6 +125,41 @@ class _ReportsScreenState extends State<ReportsScreen> {
             ),
           ];
 
+    // BAR CHART: Use all transactions, grouped as before
+    final Map<String, List<TransactionModel>> grouped = {};
+    for (final tx in allTransactions) {
+      final month = DateFormat('yyyy-MM').format(tx.date);
+      grouped.putIfAbsent(month, () => []).add(tx);
+    }
+    final sortedKeys = grouped.keys.toList()..sort();
+
+    final barGroups = <BarChartGroupData>[];
+    int i = 0;
+    for (final key in sortedKeys) {
+      final txs = grouped[key] ?? [];
+      double groupIncome = 0;
+      double groupExpense = 0;
+      for (final tx in txs) {
+        if (tx.type.toLowerCase() == 'income') {
+          groupIncome += tx.amount;
+        } else if (tx.type.toLowerCase() == 'expense') {
+          groupExpense += tx.amount;
+        }
+      }
+      barGroups.add(
+        BarChartGroupData(
+          x: i,
+          barRods: [
+            BarChartRodData(
+                toY: groupIncome, color: AppColors.secondary, width: 8),
+            BarChartRodData(
+                toY: groupExpense, color: AppColors.error, width: 8),
+          ],
+        ),
+      );
+      i++;
+    }
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: ListView(
@@ -178,42 +167,44 @@ class _ReportsScreenState extends State<ReportsScreen> {
         children: [
           Text(
             'Overview',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: AppColors.headline,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
                 ),
           ),
           const SizedBox(height: 12),
-          // Timeline filter
+          const Text(
+            'Select a date range to view your financial reports.',
+            style: TextStyle(
+              color: AppColors.primaryText,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           Row(
             children: [
-              FilterChip(
-                label: const Text('Day'),
-                selected: _selectedRange == ChartRange.day,
-                onSelected: (_) => setState(() => _selectedRange = ChartRange.day),
+              const Text(
+                'Chart Range:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryText,
+                ),
               ),
-              const SizedBox(width: 8),
-              FilterChip(
-                label: const Text('Week'),
-                selected: _selectedRange == ChartRange.week,
-                onSelected: (_) => setState(() => _selectedRange = ChartRange.week),
-              ),
-              const SizedBox(width: 8),
-              FilterChip(
-                label: const Text('Month'),
-                selected: _selectedRange == ChartRange.month,
-                onSelected: (_) => setState(() => _selectedRange = ChartRange.month),
-              ),
-              const SizedBox(width: 8),
-              FilterChip(
-                label: const Text('6 Month'),
-                selected: _selectedRange == ChartRange.sixMonth,
-                onSelected: (_) => setState(() => _selectedRange = ChartRange.sixMonth),
-              ),
-              const SizedBox(width: 8),
-              FilterChip(
-                label: const Text('Year'),
-                selected: _selectedRange == ChartRange.year,
-                onSelected: (_) => setState(() => _selectedRange = ChartRange.year),
+              const SizedBox(width: 12),
+              DropdownButton<ChartRange>(
+                value: _selectedRange,
+                items: ChartRange.values.map((range) {
+                  return DropdownMenuItem(
+                    value: range,
+                    child: Text(chartRangeLabel(range)),
+                  );
+                }).toList(),
+                onChanged: (range) {
+                  if (range != null) {
+                    setState(() => _selectedRange = range);
+                  }
+                },
               ),
             ],
           ),
@@ -237,7 +228,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           ),
           const SizedBox(height: 24),
           Text(
-            'Income & Expenses (${_selectedRange.name[0].toUpperCase()}${_selectedRange.name.substring(1)})',
+            'Monthly Income & Expenses',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: AppColors.headline,
                 ),

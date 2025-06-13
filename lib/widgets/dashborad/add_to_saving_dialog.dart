@@ -46,7 +46,7 @@ class _AddToSavingDialogState extends State<AddToSavingDialog> {
             children: [
               Expanded(
                 child: RadioListTile<String>(
-                  title: Text(
+                  title: const Text(
                     'Distribute Among All',
                     style: TextStyle(color: AppColors.primaryText),
                   ),
@@ -59,7 +59,7 @@ class _AddToSavingDialogState extends State<AddToSavingDialog> {
               ),
               Expanded(
                 child: RadioListTile<String>(
-                  title: Text(
+                  title: const Text(
                     'Single Goal',
                     style: TextStyle(color: AppColors.primaryText),
                   ),
