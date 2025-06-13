@@ -1,3 +1,4 @@
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:cashilo/widgets/dashborad/add_to_saving_dialog.dart';
 import 'package:cashilo/widgets/dashborad/withdraw_from_saving_dialog.dart';
 import 'package:flutter/material.dart';
@@ -28,9 +29,9 @@ class SavingActionButtons extends StatelessWidget {
         Expanded(
           child: ElevatedButton.icon(
             icon: const Icon(Icons.savings, color: Colors.white),
-            label: const Text(
-              'Add to Saving',
-              style: TextStyle(
+            label: Text(
+              AppLocalizations.of(context)!.addToSaving,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
                 letterSpacing: 0.5,
@@ -62,8 +63,8 @@ class SavingActionButtons extends StatelessWidget {
         Expanded(
           child: ElevatedButton.icon(
             icon: const Icon(Icons.remove_circle, color: Colors.white),
-            label: const Text(
-              'Withdraw',
+            label: Text(
+              AppLocalizations.of(context)!.withdraw,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,

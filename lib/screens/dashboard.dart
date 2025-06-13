@@ -1,4 +1,5 @@
 import 'package:cashilo/constant.dart';
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:cashilo/models/goals_model.dart';
 import 'package:cashilo/models/transaction_model.dart';
 import 'package:cashilo/widgets/dashborad/summary_card.dart';
@@ -97,6 +98,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               remainingToCover > 0) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (!mounted) return;
+              // Show the alert dialog
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
@@ -142,7 +144,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Dashboard',
+                  AppLocalizations.of(context)!.dashboard,
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.headline,
@@ -163,7 +165,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Expanded(
                           child: SummaryCard(
                             icon: Icons.attach_money_rounded,
-                            label: AppStrings.income,
+                            label: AppLocalizations.of(context)!.income,
                             amount: totalIncome,
                             color: AppColors.secondary,
                           ),
@@ -172,7 +174,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Expanded(
                           child: SummaryCard(
                             icon: Icons.money_off_rounded,
-                            label: AppStrings.expense,
+                            label: AppLocalizations.of(context)!.expense,
                             amount: totalExpenses,
                             color: AppColors.error,
                           ),
@@ -185,7 +187,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Expanded(
                           child: SummaryCard(
                             icon: Icons.account_balance_wallet_rounded,
-                            label: AppStrings.balance,
+                            label: AppLocalizations.of(context)!.balance,
                             amount: totalIncome - totalExpenses,
                             color: AppColors.primary,
                           ),
@@ -194,7 +196,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Expanded(
                           child: SummaryCard(
                             icon: Icons.savings,
-                            label: AppStrings.saving,
+                            label: AppLocalizations.of(context)!.saving,
                             amount: savings,
                             color: AppColors.headline,
                           ),
@@ -220,11 +222,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.savings_rounded,
+                            const Icon(Icons.savings_rounded,
                                 color: AppColors.primary, size: 28),
                             const SizedBox(width: 10),
                             Text(
-                              'Monthly Saving Goal Progress',
+                              AppLocalizations.of(context)!
+                                  .monthlySavingGoalProgress,
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium
@@ -252,7 +255,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 alignment: Alignment.center,
                                 child: Text(
                                   "${(savingProgress * 100).toStringAsFixed(0)}%",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: AppColors.primaryText,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -264,8 +267,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         const SizedBox(height: 14),
                         Text(
                           monthlyGoalReached
-                              ? "🎉 Congratulations! You've reached your monthly saving goal (\$${savingGoal.toStringAsFixed(2)})."
-                              : "You've saved \$${savings.toStringAsFixed(2)} of \$${savingGoal.toStringAsFixed(2)}.",
+                              ? AppLocalizations.of(context)!
+                                  .congratulationsMessage(
+                                      savingGoal.toStringAsFixed(2))
+                              : AppLocalizations.of(context)!.savingGoalAlert(
+                                  balance.toStringAsFixed(2),
+                                  remainingToCover.toStringAsFixed(2)),
                           style: TextStyle(
                             color: monthlyGoalReached
                                 ? AppColors.secondary
@@ -285,7 +292,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Recent Transactions',
+                      AppLocalizations.of(context)!.recentTransactions,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             color: AppColors.headline,
                           ),
@@ -299,16 +306,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       style: TextButton.styleFrom(
                         foregroundColor: AppColors.primary,
                       ),
-                      child: Text(showAll ? 'Show Less' : 'See All'),
+                      child: Text(showAll
+                          ? AppLocalizations.of(context)!.showLess
+                          : AppLocalizations.of(context)!.seeAll),
                     ),
                   ],
                 ),
                 displayedTransactions.isEmpty
-                    ? const Padding(
+                    ? Padding(
                         padding: EdgeInsets.symmetric(vertical: 16.0),
                         child: Center(
                           child: Text(
-                            'No transactions today.',
+                            AppLocalizations.of(context)!.noTransactionsToday,
                             style: TextStyle(
                               color: AppColors.primaryText,
                               fontSize: 16,

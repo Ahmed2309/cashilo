@@ -1,3 +1,4 @@
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:cashilo/constant.dart';
@@ -137,35 +138,45 @@ List<PieChartSectionData> buildMainPieSections({
 }
 
 List<PieChartSectionData> buildIncomePieSections(
-    Map<String, double> incomeMap) {
-  final categories = incomeCategories;
+    BuildContext context, Map<String, double> incomeMap) {
+  final income = AppLocalizations.of(context)!.incomeCategories;
+  final colors = incomeCategoryColors;
+
   return incomeMap.entries.map((e) {
-    final idx = categories.indexOf(e.key);
-    final color = incomeCategoryColors[idx % incomeCategoryColors.length];
+    final idx = income.indexOf(e.key);
+    final color = colors[idx % colors.length];
     return PieChartSectionData(
       value: e.value,
       color: color,
       title: e.key,
       radius: 38,
       titleStyle: const TextStyle(
-          fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
+        fontSize: 12,
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }).toList();
 }
 
 List<PieChartSectionData> buildExpensePieSections(
-    Map<String, double> expenseMap) {
-  final categories = expenseCategories;
+    BuildContext context, Map<String, double> expenseMap) {
+  final expenses = AppLocalizations.of(context)!.expenseCategories;
+  final colors = expenseCategoryColors;
+
   return expenseMap.entries.map((e) {
-    final idx = categories.indexOf(e.key);
-    final color = expenseCategoryColors[idx % expenseCategoryColors.length];
+    final idx = expenses.indexOf(e.key);
+    final color = colors[idx % colors.length];
     return PieChartSectionData(
       value: e.value,
       color: color,
       title: e.key,
       radius: 38,
       titleStyle: const TextStyle(
-          fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
+        fontSize: 12,
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }).toList();
 }

@@ -1,3 +1,4 @@
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class LanguageSelector extends StatelessWidget {
@@ -16,7 +17,7 @@ class LanguageSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: const Icon(Icons.language),
-      title: const Text('Language'),
+      title: Text(AppLocalizations.of(context)!.language),
       trailing: DropdownButton<String>(
         value: selectedLanguage,
         items: languages

@@ -49,7 +49,7 @@ class GoalCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           goal.name,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: AppColors.headline,
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
@@ -98,7 +98,7 @@ class GoalCard extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Text(
                       "${(percent * 100).toStringAsFixed(0)}%",
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.primaryText,
                         fontWeight: FontWeight.bold,
                       ),
@@ -110,14 +110,14 @@ class GoalCard extends StatelessWidget {
             const SizedBox(height: 14),
             Text(
               'Saved: \$${goal.savedAmount.toStringAsFixed(2)} / \$${goal.targetAmount.toStringAsFixed(2)}',
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.primaryText,
                 fontWeight: FontWeight.w500,
               ),
             ),
             if (completed)
-              Padding(
-                padding: const EdgeInsets.only(top: 6.0),
+              const Padding(
+                padding: EdgeInsets.only(top: 6.0),
                 child: Text(
                   '🎉 Goal Completed!',
                   style: TextStyle(

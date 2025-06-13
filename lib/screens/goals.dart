@@ -1,3 +1,4 @@
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:cashilo/models/goals_model.dart';
 import 'package:cashilo/widgets/goals/goal_cards.dart';
 import 'package:flutter/material.dart';
@@ -104,7 +105,7 @@ class _GoalsScreenState extends State<GoalsScreen>
         elevation: 0,
         iconTheme: const IconThemeData(color: AppColors.primaryText),
         title: Text(
-          'My Goals',
+          AppLocalizations.of(context)!.myGoal,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: AppColors.headline,
@@ -117,24 +118,25 @@ class _GoalsScreenState extends State<GoalsScreen>
           indicatorColor: AppColors.primary,
           indicatorWeight: 3,
           labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-          tabs: const [
-            Tab(text: 'Active Goals'),
-            Tab(text: 'Stopped/Completed'),
+          tabs: [
+            Tab(text: AppLocalizations.of(context)!.activeGoals),
+            Tab(text: AppLocalizations.of(context)!.doneOrStoppedGoals),
           ],
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: goals.isEmpty
-            ? const Center(
+            ? Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.flag_rounded, size: 60, color: AppColors.card),
-                    SizedBox(height: 16),
+                    const Icon(Icons.flag_rounded,
+                        size: 60, color: AppColors.card),
+                    const SizedBox(height: 16),
                     Text(
-                      'No goals yet. Tap + to add one!',
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.noGoalsYet,
+                      style: const TextStyle(
                         color: AppColors.primaryText,
                         fontSize: 18,
                         fontWeight: FontWeight.w500,

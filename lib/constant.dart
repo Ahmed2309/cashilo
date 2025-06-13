@@ -12,55 +12,6 @@ class AppColors {
   static const card = Color(0xFFECECEC);
 }
 
-// App Strings
-class AppStrings {
-  static const appName = 'Cashilo';
-  static const addTransaction = 'Add Transaction';
-  static const income = 'Income';
-  static const expense = 'Expense';
-  static const balance = 'Balance';
-  static const saving = 'Total Saving';
-  static const addToSaving = 'Add to Saving';
-  static const withdraw = 'Withdraw';
-  static const monthlySavingGoal = 'Monthly Saving Goal';
-}
-
-// App Lists
-const List<String> incomeCategories = [
-  'Salary',
-  'Bonus',
-  'Investment',
-  'Business',
-  'Gift',
-  'Refund',
-  'Freelance',
-  'Grants',
-  'Other'
-];
-
-const List<String> expenseCategories = [
-  'Food',
-  'Shopping',
-  'Bills',
-  'Transport',
-  'Health',
-  'Education',
-  'Entertainment',
-  'Travel',
-  'Groceries',
-  'Rent',
-  'Utilities',
-  'Insurance',
-  'Subscriptions',
-  'Charity',
-  'Personal Care',
-  'Taxes',
-  'Loan Payment',
-  'Pets',
-  'Gifts',
-  'Other'
-];
-
 const List<String> supportedLanguages = [
   'English',
   'Arabic',

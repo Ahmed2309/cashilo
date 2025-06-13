@@ -1,3 +1,4 @@
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cashilo/constant.dart';
@@ -17,6 +18,23 @@ class TransactionTile extends StatelessWidget {
         : AppColors.error.withOpacity(0.12);
     final chipTextColor = isIncome ? AppColors.secondary : AppColors.error;
 
+    final expenseCategories = AppLocalizations.of(context)!.expenseCategories;
+    final incomeCategories = AppLocalizations.of(context)!.incomeCategories;
+
+    String localizedCategory;
+    if (transaction.type.toLowerCase() == 'income') {
+      localizedCategory = incomeCategories.firstWhere(
+        (category) =>
+            category.toLowerCase() == transaction.category.toLowerCase(),
+        orElse: () => transaction.category,
+      );
+    } else {
+      localizedCategory = expenseCategories.firstWhere(
+        (category) =>
+            category.toLowerCase() == transaction.category.toLowerCase(),
+        orElse: () => transaction.category,
+      );
+    }
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       color: AppColors.card,
@@ -33,7 +51,7 @@ class TransactionTile extends StatelessWidget {
           ),
         ),
         title: Text(
-          transaction.category,
+          localizedCategory,
           style: const TextStyle(
             color: AppColors.headline,
             fontWeight: FontWeight.w600,
@@ -69,7 +87,9 @@ class TransactionTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                transaction.type,
+                transaction.type == 'Income'
+                    ? AppLocalizations.of(context)!.income
+                    : AppLocalizations.of(context)!.expense,
                 style: TextStyle(
                   color: chipTextColor,
                   fontSize: 12,

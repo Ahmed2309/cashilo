@@ -1,3 +1,4 @@
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:cashilo/models/goals_model.dart';
 import 'package:cashilo/models/transaction_model.dart';
@@ -35,7 +36,7 @@ class _WithdrawFromSavingDialogState extends State<WithdrawFromSavingDialog> {
       backgroundColor: AppColors.background,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       title: Text(
-        'Withdraw from Saving',
+        AppLocalizations.of(context)!.withDraw,
         style: Theme.of(context).textTheme.titleLarge?.copyWith(
               color: AppColors.primary,
               fontWeight: FontWeight.bold,
@@ -52,8 +53,8 @@ class _WithdrawFromSavingDialogState extends State<WithdrawFromSavingDialog> {
                 if (withdrawFromAll) selectedGoal = null;
               });
             },
-            title: const Text(
-              'Withdraw from all goals',
+            title: Text(
+              AppLocalizations.of(context)!.withdrawFromAll,
               style: TextStyle(color: AppColors.primaryText),
             ),
             activeColor: AppColors.primary,
@@ -73,7 +74,7 @@ class _WithdrawFromSavingDialogState extends State<WithdrawFromSavingDialog> {
                   .toList(),
               onChanged: (g) => setState(() => selectedGoal = g),
               decoration: InputDecoration(
-                labelText: 'Goal',
+                labelText: AppLocalizations.of(context)!.myGoals,
                 labelStyle: const TextStyle(color: AppColors.primaryText),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -93,10 +94,12 @@ class _WithdrawFromSavingDialogState extends State<WithdrawFromSavingDialog> {
             style: const TextStyle(color: AppColors.primaryText),
             decoration: InputDecoration(
               labelText: withdrawFromAll
-                  ? 'Amount (max \$${totalSaved.toStringAsFixed(2)})'
+                  ? AppLocalizations.of(context)!
+                      .amountWithMax(totalSaved.toStringAsFixed(2))
                   : selectedGoal != null
-                      ? 'Amount (max \$${selectedGoal!.savedAmount.toStringAsFixed(2)})'
-                      : 'Amount',
+                      ? AppLocalizations.of(context)!.amountWithMax(
+                          selectedGoal!.savedAmount.toStringAsFixed(2))
+                      : AppLocalizations.of(context)!.amount,
               labelStyle: const TextStyle(color: AppColors.primaryText),
               prefixIcon:
                   const Icon(Icons.attach_money, color: AppColors.primary),
@@ -121,7 +124,7 @@ class _WithdrawFromSavingDialogState extends State<WithdrawFromSavingDialog> {
             foregroundColor: AppColors.primary,
             textStyle: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         ElevatedButton(
           onPressed: () {
@@ -182,7 +185,7 @@ class _WithdrawFromSavingDialogState extends State<WithdrawFromSavingDialog> {
             ),
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           ),
-          child: const Text('Withdraw'),
+          child: Text(AppLocalizations.of(context)!.withdraw),
         ),
       ],
     );

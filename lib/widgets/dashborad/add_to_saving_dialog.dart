@@ -1,3 +1,4 @@
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:cashilo/models/goals_model.dart';
 import 'package:cashilo/models/transaction_model.dart';
@@ -33,7 +34,7 @@ class _AddToSavingDialogState extends State<AddToSavingDialog> {
       backgroundColor: AppColors.background,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       title: Text(
-        'Add to Saving',
+        AppLocalizations.of(context)!.addToSaving,
         style: Theme.of(context).textTheme.titleLarge?.copyWith(
               color: AppColors.primary,
               fontWeight: FontWeight.bold,
@@ -45,8 +46,8 @@ class _AddToSavingDialogState extends State<AddToSavingDialog> {
           Column(
             children: [
               RadioListTile<String>(
-                title: const Text(
-                  'Distribute Among All',
+                title: Text(
+                  AppLocalizations.of(context)!.dGoals,
                   style: TextStyle(color: AppColors.primaryText),
                 ),
                 value: 'all',
@@ -56,8 +57,8 @@ class _AddToSavingDialogState extends State<AddToSavingDialog> {
                 contentPadding: EdgeInsets.zero,
               ),
               RadioListTile<String>(
-                title: const Text(
-                  'Single Goal',
+                title: Text(
+                  AppLocalizations.of(context)!.sGoal,
                   style: TextStyle(color: AppColors.primaryText),
                 ),
                 value: 'single',
@@ -100,7 +101,8 @@ class _AddToSavingDialogState extends State<AddToSavingDialog> {
             keyboardType: TextInputType.number,
             style: const TextStyle(color: AppColors.primaryText),
             decoration: InputDecoration(
-              labelText: 'Amount (max \$${widget.balance.toStringAsFixed(2)})',
+              labelText: AppLocalizations.of(context)!
+                  .amountWithMax(widget.balance.toStringAsFixed(2)),
               labelStyle: const TextStyle(color: AppColors.primaryText),
               prefixIcon:
                   const Icon(Icons.attach_money, color: AppColors.primary),
@@ -120,13 +122,12 @@ class _AddToSavingDialogState extends State<AddToSavingDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
-          style: TextButton.styleFrom(
-            foregroundColor: AppColors.primary,
-            textStyle: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          child: const Text('Cancel'),
-        ),
+            onPressed: () => Navigator.pop(context),
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.primary,
+              textStyle: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            child: Text(AppLocalizations.of(context)!.cancel)),
         ElevatedButton(
           onPressed: () {
             final value = double.tryParse(amountController.text) ?? 0;
@@ -212,7 +213,7 @@ class _AddToSavingDialogState extends State<AddToSavingDialog> {
             ),
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           ),
-          child: const Text('Add'),
+          child: Text(AppLocalizations.of(context)!.add),
         ),
       ],
     );

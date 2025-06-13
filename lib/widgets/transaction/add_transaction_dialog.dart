@@ -1,10 +1,11 @@
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../../../models/transaction_model.dart';
-import '../../../constant.dart';
 
 class AddTransactionDialog extends StatefulWidget {
   final Box<TransactionModel> transactionBox;
+
   const AddTransactionDialog({super.key, required this.transactionBox});
 
   @override
@@ -13,14 +14,21 @@ class AddTransactionDialog extends StatefulWidget {
 
 class _AddTransactionDialogState extends State<AddTransactionDialog> {
   final _formKey = GlobalKey<FormState>();
+
   String type = 'Income';
-  String category = incomeCategories.first;
+  String category = '';
   double amount = 0;
   DateTime date = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-    final categories = type == 'Income' ? incomeCategories : expenseCategories;
+    final income = AppLocalizations.of(context)!.incomeCategories;
+    final expense = AppLocalizations.of(context)!.expenseCategories;
+    final categories = type == 'Income' ? income : expense;
+
+    if (category.isEmpty && categories.isNotEmpty) {
+      category = categories.first;
+    }
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
@@ -43,7 +51,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Add Transaction',
+                  AppLocalizations.of(context)!.addTransaction,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.deepPurple,
@@ -52,21 +60,25 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 const SizedBox(height: 18),
                 DropdownButtonFormField<String>(
                   value: type,
-                  items: const [
-                    DropdownMenuItem(value: 'Income', child: Text('Income')),
-                    DropdownMenuItem(value: 'Expense', child: Text('Expense')),
+                  items: [
+                    DropdownMenuItem(
+                      value: 'Income',
+                      child: Text(AppLocalizations.of(context)!.income),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Expense',
+                      child: Text(AppLocalizations.of(context)!.expense),
+                    ),
                   ],
                   onChanged: (val) {
                     setState(() {
                       type = val ?? 'Income';
-                      category = (type == 'Income'
-                              ? incomeCategories
-                              : expenseCategories)
-                          .first;
+                      final newCategories = type == 'Income' ? income : expense;
+                      category = newCategories.first;
                     });
                   },
                   decoration: InputDecoration(
-                    labelText: 'Type',
+                    labelText: AppLocalizations.of(context)!.type,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
@@ -81,7 +93,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                   onChanged: (val) =>
                       setState(() => category = val ?? categories.first),
                   decoration: InputDecoration(
-                    labelText: 'Category',
+                    labelText: AppLocalizations.of(context)!.category,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
@@ -89,7 +101,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 const SizedBox(height: 14),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Amount',
+                    labelText: AppLocalizations.of(context)!.amount,
                     prefixIcon: const Icon(Icons.attach_money),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12)),
@@ -97,7 +109,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                   keyboardType: TextInputType.number,
                   onChanged: (val) => amount = double.tryParse(val) ?? 0,
                   validator: (val) => (double.tryParse(val ?? '') ?? 0) <= 0
-                      ? 'Enter valid amount'
+                      ? AppLocalizations.of(context)!.enterValidAmount
                       : null,
                 ),
                 const SizedBox(height: 14),
@@ -108,7 +120,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                       context: context,
                       initialDate: date,
                       firstDate: DateTime(2000),
-                      lastDate: DateTime.now(), // Prevent future dates
+                      lastDate: DateTime.now(),
                     );
                     if (picked != null) setState(() => date = picked);
                   },
@@ -127,7 +139,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                             size: 20, color: Colors.deepPurple),
                         const SizedBox(width: 10),
                         Text(
-                          'Pick Date: ${date.toLocal().toString().split(' ')[0]}',
+                          '${AppLocalizations.of(context)!.pickDate}: ${date.toLocal().toString().split(' ')[0]}',
                           style: const TextStyle(fontSize: 15),
                         ),
                       ],
@@ -144,7 +156,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                         textStyle: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),
+                      child: Text(AppLocalizations.of(context)!.cancel),
                     ),
                     const SizedBox(width: 12),
                     ElevatedButton(
@@ -168,13 +180,13 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                             amount: amount,
                             category: category,
                             date: date,
-                            note: '', // No note
+                            note: '',
                           );
                           widget.transactionBox.add(newTx);
                           Navigator.pop(context);
                         }
                       },
-                      child: const Text('Add'),
+                      child: Text(AppLocalizations.of(context)!.add),
                     ),
                   ],
                 ),

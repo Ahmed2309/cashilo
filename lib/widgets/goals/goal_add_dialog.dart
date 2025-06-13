@@ -51,9 +51,9 @@ class _GoalAddDialogState extends State<GoalAddDialog> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       backgroundColor: AppColors.background,
-      title: Text(
+      title: const Text(
         'Add Goal',
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.headline,
           fontWeight: FontWeight.bold,
           fontSize: 20,
@@ -72,7 +72,7 @@ class _GoalAddDialogState extends State<GoalAddDialog> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.primary),
+                  borderSide: const BorderSide(color: AppColors.primary),
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
@@ -88,7 +88,7 @@ class _GoalAddDialogState extends State<GoalAddDialog> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.primary),
+                  borderSide: const BorderSide(color: AppColors.primary),
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
@@ -107,7 +107,7 @@ class _GoalAddDialogState extends State<GoalAddDialog> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.primary),
+                  borderSide: const BorderSide(color: AppColors.primary),
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),

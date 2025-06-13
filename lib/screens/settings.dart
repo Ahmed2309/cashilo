@@ -1,3 +1,4 @@
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:cashilo/models/goals_model.dart';
 import 'package:cashilo/models/transaction_model.dart';
@@ -5,6 +6,7 @@ import 'package:hive/hive.dart';
 import 'package:cashilo/widgets/settings/language_selector.dart';
 import 'package:cashilo/widgets/settings/currency_selector.dart';
 import 'package:cashilo/constant.dart';
+import 'package:cashilo/main.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -27,7 +29,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings',
+        title: Text(AppLocalizations.of(context)!.settings,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold, color: AppColors.headline)),
       ),
@@ -42,7 +44,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               setState(() {
                 selectedLanguage = val;
               });
-              // TODO: Apply language change in the app
+              // Set locale in the app
+              Locale locale =
+                  val == 'Arabic' ? const Locale('ar') : const Locale('en');
+              // Call the callback from MainScreen or MyApp
+              if (context.findAncestorStateOfType<MyAppState>() != null) {
+                context
+                    .findAncestorStateOfType<MyAppState>()!
+                    .setLocale(locale);
+              }
             },
           ),
           CurrencySelector(
@@ -58,7 +68,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.notifications, color: AppColors.primary),
-            title: const Text('Enable Notifications',
+            title: Text(AppLocalizations.of(context)!.enableNotifications,
                 style: TextStyle(color: AppColors.primaryText)),
             trailing: Switch(
               value: notificationsEnabled,
@@ -73,7 +83,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ListTile(
             leading: const Icon(Icons.dark_mode, color: AppColors.primary),
-            title: const Text('Dark Mode',
+            title: Text(AppLocalizations.of(context)!.darkMode,
                 style: TextStyle(color: AppColors.primaryText)),
             trailing: Switch(
               value: darkMode,
@@ -89,7 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.delete_forever, color: AppColors.error),
-            title: const Text('Clear All Data',
+            title: Text(AppLocalizations.of(context)!.clearAllData,
                 style: TextStyle(color: AppColors.primaryText)),
             subtitle: const Text(
               'This will delete all your goals and transactions.',
@@ -130,12 +140,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           const Divider(),
-          const ListTile(
-            leading: Icon(Icons.info_outline, color: AppColors.primary),
-            title:
-                Text('About', style: TextStyle(color: AppColors.primaryText)),
+          ListTile(
+            leading: const Icon(Icons.info_outline, color: AppColors.primary),
+            title: Text(AppLocalizations.of(context)!.about,
+                style: const TextStyle(color: AppColors.primaryText)),
             subtitle: Text(
-              'Cashilo v1.0\nA simple savings and goals tracker.',
+              AppLocalizations.of(context)!.appDescription,
               style: TextStyle(color: AppColors.primaryText),
             ),
           ),

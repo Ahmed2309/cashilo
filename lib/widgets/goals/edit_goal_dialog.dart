@@ -81,9 +81,9 @@ class _EditGoalDialogState extends State<EditGoalDialog> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       backgroundColor: AppColors.background,
-      title: Text(
+      title: const Text(
         'Edit Goal',
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.headline,
           fontWeight: FontWeight.bold,
           fontSize: 20,
@@ -102,7 +102,7 @@ class _EditGoalDialogState extends State<EditGoalDialog> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.primary),
+                  borderSide: const BorderSide(color: AppColors.primary),
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
@@ -118,7 +118,7 @@ class _EditGoalDialogState extends State<EditGoalDialog> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.primary),
+                  borderSide: const BorderSide(color: AppColors.primary),
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
@@ -137,7 +137,7 @@ class _EditGoalDialogState extends State<EditGoalDialog> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.primary),
+                  borderSide: const BorderSide(color: AppColors.primary),
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
@@ -168,7 +168,7 @@ class _EditGoalDialogState extends State<EditGoalDialog> {
               Navigator.pop(context);
             }
           },
-          child: Text('Save'),
+          child: const Text('Save'),
         ),
       ],
     );

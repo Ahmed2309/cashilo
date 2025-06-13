@@ -1,4 +1,5 @@
 import 'package:cashilo/constant.dart';
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:cashilo/screens/dashboard.dart';
 import 'package:cashilo/screens/goals.dart';
 import 'package:cashilo/screens/reports.dart';
@@ -7,21 +8,23 @@ import 'package:cashilo/screens/transaction.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final void Function(Locale locale) onLocaleChange;
+
+  const MainScreen({super.key, required this.onLocaleChange});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<MainScreen> createState() => MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   static const List<Widget> _pages = <Widget>[
-    Center(child: DashboardScreen()),
-    Center(child: TransactionsPage()),
-    Center(child: GoalsScreen()),
-    Center(child: ReportsScreen()),
-    Center(child: SettingsScreen()),
+    DashboardScreen(),
+    TransactionsPage(),
+    GoalsScreen(),
+    ReportsScreen(),
+    SettingsScreen(),
   ];
 
   void _onDrawerItemTapped(int index) {
@@ -37,7 +40,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Cashilo',
+          AppLocalizations.of(context)!.appName,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: AppColors.background,
@@ -55,7 +58,6 @@ class _MainScreenState extends State<MainScreen> {
               // TODO: Handle notification tap
             },
           ),
-          // Add more IconButton widgets here if you want more actions
         ],
       ),
       drawer: Drawer(
@@ -68,8 +70,8 @@ class _MainScreenState extends State<MainScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
+            DrawerHeader(
+              decoration: const BoxDecoration(
                 color: selectedColor,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(32),
@@ -77,8 +79,8 @@ class _MainScreenState extends State<MainScreen> {
               ),
               child: Center(
                 child: Text(
-                  'Cashilo',
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.appName,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -88,35 +90,35 @@ class _MainScreenState extends State<MainScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.dashboard_rounded),
-              title: const Text('Dashboard'),
+              title: Text(AppLocalizations.of(context)!.dashboard),
               selected: _selectedIndex == 0,
               selectedTileColor: selectedColor.withOpacity(0.1),
               onTap: () => _onDrawerItemTapped(0),
             ),
             ListTile(
               leading: const Icon(Icons.list_alt_rounded),
-              title: const Text('Transactions'),
+              title: Text(AppLocalizations.of(context)!.transactions),
               selected: _selectedIndex == 1,
               selectedTileColor: selectedColor.withOpacity(0.1),
               onTap: () => _onDrawerItemTapped(1),
             ),
             ListTile(
               leading: const Icon(Icons.list_alt_rounded),
-              title: const Text('My Goals'),
+              title: Text(AppLocalizations.of(context)!.myGoals),
               selected: _selectedIndex == 2,
               selectedTileColor: selectedColor.withOpacity(0.1),
               onTap: () => _onDrawerItemTapped(2),
             ),
             ListTile(
               leading: const Icon(Icons.pie_chart_rounded),
-              title: const Text('Reports'),
+              title: Text(AppLocalizations.of(context)!.reports),
               selected: _selectedIndex == 3,
               selectedTileColor: selectedColor.withOpacity(0.1),
               onTap: () => _onDrawerItemTapped(3),
             ),
             ListTile(
               leading: const Icon(Icons.settings_rounded),
-              title: const Text('Settings'),
+              title: Text(AppLocalizations.of(context)!.settings),
               selected: _selectedIndex == 4,
               selectedTileColor: selectedColor.withOpacity(0.1),
               onTap: () => _onDrawerItemTapped(4),

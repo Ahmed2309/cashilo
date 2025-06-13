@@ -60,6 +60,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         start = DateTime(now.year - 1, now.month, now.day);
         break;
     }
+
     final filteredTransactions = allTransactions
         .where((tx) => tx.date.isAfter(start.subtract(const Duration(days: 1))))
         .toList();
@@ -85,6 +86,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
 
     final hasPieData = totalIncome > 0 || totalExpense > 0 || totalSaving > 0;
+
     final mainPieSections = hasPieData
         ? buildMainPieSections(
             totalIncome: totalIncome,
@@ -102,7 +104,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           ];
 
     final incomePieSections = incomeMap.isNotEmpty
-        ? buildIncomePieSections(incomeMap)
+        ? buildIncomePieSections(context, incomeMap)
         : [
             PieChartSectionData(
               value: 1,
@@ -114,7 +116,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           ];
 
     final expensePieSections = expenseMap.isNotEmpty
-        ? buildExpensePieSections(expenseMap)
+        ? buildExpensePieSections(context, expenseMap)
         : [
             PieChartSectionData(
               value: 1,
@@ -125,12 +127,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
             ),
           ];
 
-    // BAR CHART: Use all transactions, grouped as before
+    // BAR CHART
     final Map<String, List<TransactionModel>> grouped = {};
     for (final tx in allTransactions) {
       final month = DateFormat('yyyy-MM').format(tx.date);
       grouped.putIfAbsent(month, () => []).add(tx);
     }
+
     final sortedKeys = grouped.keys.toList()..sort();
 
     final barGroups = <BarChartGroupData>[];

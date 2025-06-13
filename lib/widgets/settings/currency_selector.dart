@@ -1,3 +1,4 @@
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class CurrencySelector extends StatelessWidget {
@@ -16,7 +17,7 @@ class CurrencySelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: const Icon(Icons.attach_money),
-      title: const Text('Currency'),
+      title: Text(AppLocalizations.of(context)!.currency),
       trailing: DropdownButton<String>(
         value: selectedCurrency,
         items: currencies
