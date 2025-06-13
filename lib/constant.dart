@@ -73,3 +73,36 @@ const List<String> supportedCurrencies = [
   'SAR',
   'EGP',
 ];
+
+const List<Color> incomeCategoryColors = [
+  AppColors.secondary,
+  Colors.green,
+  Colors.blue,
+  Colors.orange,
+  Colors.teal,
+  Colors.purple,
+  Colors.indigo,
+  AppColors.primary,
+  Colors.brown,
+];
+
+const List<Color> expenseCategoryColors = [
+  AppColors.error,
+  Colors.redAccent,
+  Colors.orange,
+  Colors.purple,
+  Colors.amber,
+  Colors.indigo,
+  Colors.cyan,
+  Colors.brown,
+  Colors.pink,
+  Colors.lime,
+  Colors.deepOrange,
+  Colors.deepPurple,
+  Colors.blue, // strong blue
+  Colors.green, // strong green
+  Colors.teal, // strong teal
+  Colors.purple, // strong purple
+  AppColors.primary,
+  AppColors.secondary,
+];

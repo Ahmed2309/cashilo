@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cashilo/models/goals_model.dart';
+import 'package:cashilo/constant.dart';
 
 class EditGoalDialog extends StatefulWidget {
   final Goal goal;
@@ -78,39 +79,85 @@ class _EditGoalDialogState extends State<EditGoalDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Edit Goal'),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      backgroundColor: AppColors.background,
+      title: Text(
+        'Edit Goal',
+        style: const TextStyle(
+          color: AppColors.headline,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
+      ),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Goal Name'),
+              decoration: InputDecoration(
+                labelText: 'Goal Name',
+                labelStyle: const TextStyle(color: AppColors.primaryText),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.primary),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
             ),
+            const SizedBox(height: 12),
             TextField(
               controller: _amountController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Target Amount'),
+              decoration: InputDecoration(
+                labelText: 'Target Amount',
+                labelStyle: const TextStyle(color: AppColors.primaryText),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.primary),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               value: _period,
               items: periods
                   .map((p) => DropdownMenuItem(value: p, child: Text(p)))
                   .toList(),
               onChanged: (val) => setState(() => _period = val ?? '1 Month'),
-              decoration: const InputDecoration(labelText: 'Period'),
+              decoration: InputDecoration(
+                labelText: 'Period',
+                labelStyle: const TextStyle(color: AppColors.primaryText),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.primary),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
             ),
-            const SizedBox(height: 8),
           ],
         ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: const Text('Cancel', style: TextStyle(color: AppColors.error)),
         ),
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
           onPressed: () {
             if (_nameController.text.isNotEmpty &&
                 _amountController.text.isNotEmpty) {
@@ -121,7 +168,7 @@ class _EditGoalDialogState extends State<EditGoalDialog> {
               Navigator.pop(context);
             }
           },
-          child: const Text('Save'),
+          child: Text('Save'),
         ),
       ],
     );

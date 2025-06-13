@@ -105,15 +105,18 @@ class _GoalsScreenState extends State<GoalsScreen>
         iconTheme: const IconThemeData(color: AppColors.primaryText),
         title: Text(
           'My Goals',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: AppColors.headline,
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
+                color: AppColors.headline,
               ),
         ),
         bottom: TabBar(
           controller: _tabController,
           labelColor: AppColors.primary,
+          unselectedLabelColor: AppColors.primaryText,
           indicatorColor: AppColors.primary,
+          indicatorWeight: 3,
+          labelStyle: const TextStyle(fontWeight: FontWeight.bold),
           tabs: const [
             Tab(text: 'Active Goals'),
             Tab(text: 'Stopped/Completed'),
@@ -124,9 +127,20 @@ class _GoalsScreenState extends State<GoalsScreen>
         padding: const EdgeInsets.all(16),
         child: goals.isEmpty
             ? const Center(
-                child: Text(
-                  'No goals yet. Tap + to add one!',
-                  style: TextStyle(color: AppColors.primaryText),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.flag_rounded, size: 60, color: AppColors.card),
+                    SizedBox(height: 16),
+                    Text(
+                      'No goals yet. Tap + to add one!',
+                      style: TextStyle(
+                        color: AppColors.primaryText,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               )
             : TabBarView(

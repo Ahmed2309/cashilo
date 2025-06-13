@@ -167,10 +167,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
         children: [
           Text(
             'Overview',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: AppColors.headline,
-                  fontSize: 22,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
+                  color: AppColors.headline,
                 ),
           ),
           const SizedBox(height: 12),

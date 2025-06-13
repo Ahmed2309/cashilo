@@ -30,14 +30,17 @@ class _TransactionsPageState extends State<TransactionsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Transactions'),
-        backgroundColor: AppColors.background,
-        foregroundColor: AppColors.primaryText,
-        elevation: 0,
-      ),
       body: Column(
         children: [
+          const SizedBox(height: 16),
+          Text(
+            'Transactions',
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.headline,
+                ),
+          ),
+          const SizedBox(height: 10),
           TransactionSearchBar(
             searchQuery: searchQuery,
             onChanged: (val) => setState(() => searchQuery = val),

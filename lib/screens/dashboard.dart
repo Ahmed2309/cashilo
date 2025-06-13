@@ -205,27 +205,78 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // Saving Goal Progress
-                Text(
-                  'Monthly Saving Goal Progress',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.headline,
-                      ),
-                ),
-                const SizedBox(height: 8),
-                LinearProgressIndicator(
-                  value: savingProgress.toDouble(),
-                  minHeight: 14,
-                  backgroundColor: AppColors.card,
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  monthlyGoalReached
-                      ? "Congratulations! You've reached your monthly saving goal (\$${savingGoal.toStringAsFixed(2)})."
-                      : "You've saved ${(savingProgress * 100).toStringAsFixed(0)}% of your goal (\$${savings.toStringAsFixed(2)} / \$${savingGoal.toStringAsFixed(2)}).",
-                  style: const TextStyle(color: AppColors.primaryText),
+                Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  color: Colors.white,
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.savings_rounded,
+                                color: AppColors.primary, size: 28),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Monthly Saving Goal Progress',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    color: AppColors.headline,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Stack(
+                          alignment: Alignment.centerLeft,
+                          children: [
+                            LinearProgressIndicator(
+                              value: savingProgress.toDouble(),
+                              minHeight: 18,
+                              backgroundColor: AppColors.card,
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            Positioned.fill(
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "${(savingProgress * 100).toStringAsFixed(0)}%",
+                                  style: TextStyle(
+                                    color: AppColors.primaryText,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 14),
+                        Text(
+                          monthlyGoalReached
+                              ? "🎉 Congratulations! You've reached your monthly saving goal (\$${savingGoal.toStringAsFixed(2)})."
+                              : "You've saved \$${savings.toStringAsFixed(2)} of \$${savingGoal.toStringAsFixed(2)}.",
+                          style: TextStyle(
+                            color: monthlyGoalReached
+                                ? AppColors.secondary
+                                : AppColors.primaryText,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 24),
 

@@ -44,31 +44,27 @@ class _AddToSavingDialogState extends State<AddToSavingDialog> {
         children: [
           Column(
             children: [
-              Expanded(
-                child: RadioListTile<String>(
-                  title: const Text(
-                    'Distribute Among All',
-                    style: TextStyle(color: AppColors.primaryText),
-                  ),
-                  value: 'all',
-                  groupValue: mode,
-                  activeColor: AppColors.primary,
-                  onChanged: (v) => setState(() => mode = v!),
-                  contentPadding: EdgeInsets.zero,
+              RadioListTile<String>(
+                title: const Text(
+                  'Distribute Among All',
+                  style: TextStyle(color: AppColors.primaryText),
                 ),
+                value: 'all',
+                groupValue: mode,
+                activeColor: AppColors.primary,
+                onChanged: (v) => setState(() => mode = v!),
+                contentPadding: EdgeInsets.zero,
               ),
-              Expanded(
-                child: RadioListTile<String>(
-                  title: const Text(
-                    'Single Goal',
-                    style: TextStyle(color: AppColors.primaryText),
-                  ),
-                  value: 'single',
-                  groupValue: mode,
-                  activeColor: AppColors.primary,
-                  onChanged: (v) => setState(() => mode = v!),
-                  contentPadding: EdgeInsets.zero,
+              RadioListTile<String>(
+                title: const Text(
+                  'Single Goal',
+                  style: TextStyle(color: AppColors.primaryText),
                 ),
+                value: 'single',
+                groupValue: mode,
+                activeColor: AppColors.primary,
+                onChanged: (v) => setState(() => mode = v!),
+                contentPadding: EdgeInsets.zero,
               ),
             ],
           ),

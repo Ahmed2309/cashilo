@@ -36,7 +36,13 @@ class _MainScreenState extends State<MainScreen> {
     const Color selectedColor = AppColors.primary;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cashilo'),
+        title: Text(
+          'Cashilo',
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: AppColors.background,
+              ),
+        ),
         centerTitle: true,
         backgroundColor: selectedColor,
         foregroundColor: Colors.white,

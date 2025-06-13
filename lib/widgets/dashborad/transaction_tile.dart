@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:cashilo/constant.dart';
 import '../../models/transaction_model.dart';
 
@@ -16,11 +17,12 @@ class TransactionTile extends StatelessWidget {
         : AppColors.error.withOpacity(0.12);
     final chipTextColor = isIncome ? AppColors.secondary : AppColors.error;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          vertical: 6), // Add vertical space between tiles
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      color: AppColors.card,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      elevation: 2,
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: CircleAvatar(
           backgroundColor: AppColors.primary.withOpacity(0.10),
           child: Icon(
@@ -35,55 +37,48 @@ class TransactionTile extends StatelessWidget {
           style: const TextStyle(
             color: AppColors.headline,
             fontWeight: FontWeight.w600,
+            fontSize: 16,
             overflow: TextOverflow.ellipsis,
           ),
           maxLines: 1,
         ),
         subtitle: Text(
-          '${transaction.date.year}-${transaction.date.month.toString().padLeft(2, '0')}-${transaction.date.day.toString().padLeft(2, '0')}'
-          '${transaction.note.isNotEmpty ? " • ${transaction.note}" : ""}',
+          '${DateFormat.yMMMd().format(transaction.date)}'
+          '${transaction.note.isNotEmpty ? ' • ${transaction.note}' : ''}',
           style: const TextStyle(color: AppColors.primaryText, fontSize: 13),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing: SizedBox(
-          width: 100,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                child: Text(
-                  '$amountPrefix\$${transaction.amount.toStringAsFixed(2)}',
-                  style: TextStyle(
-                    color: amountColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  maxLines: 1,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              '$amountPrefix\$${transaction.amount.abs().toStringAsFixed(2)}',
+              style: TextStyle(
+                color: amountColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: chipColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                transaction.type,
+                style: TextStyle(
+                  color: chipTextColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(width: 8),
-              Chip(
-                label: Text(
-                  transaction.type,
-                  style: const TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w500),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                backgroundColor: chipColor,
-                labelStyle: TextStyle(color: chipTextColor),
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        tileColor: AppColors.card,
-        minVerticalPadding: 8,
       ),
     );
   }

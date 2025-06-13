@@ -32,6 +32,18 @@ class ReportsPieChart extends StatelessWidget {
               ),
             ),
           ),
+        // Show total amount
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            'Total: \$${totalValue.toStringAsFixed(2)}',
+            style: const TextStyle(
+              color: AppColors.primary,
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
+            ),
+          ),
+        ),
         SizedBox(
           height: height ?? 180,
           child: PieChart(
@@ -126,31 +138,10 @@ List<PieChartSectionData> buildMainPieSections({
 
 List<PieChartSectionData> buildIncomePieSections(
     Map<String, double> incomeMap) {
-  final colors = [
-    AppColors.secondary,
-    Colors.green,
-    Colors.blue,
-    Colors.orange,
-    Colors.teal,
-    Colors.purple,
-    Colors.amber,
-    Colors.indigo,
-    Colors.cyan,
-    Colors.brown,
-    Colors.pink,
-    Colors.lime,
-    Colors.deepOrange,
-    Colors.deepPurple,
-    Colors.lightBlue,
-    Colors.lightGreen,
-    Colors.redAccent,
-    Colors.yellow,
-    Colors.grey,
-  ];
-  int i = 0;
+  final categories = incomeCategories;
   return incomeMap.entries.map((e) {
-    final color = colors[i % colors.length];
-    i++;
+    final idx = categories.indexOf(e.key);
+    final color = incomeCategoryColors[idx % incomeCategoryColors.length];
     return PieChartSectionData(
       value: e.value,
       color: color,
@@ -164,28 +155,10 @@ List<PieChartSectionData> buildIncomePieSections(
 
 List<PieChartSectionData> buildExpensePieSections(
     Map<String, double> expenseMap) {
-  final colors = [
-    AppColors.error,
-    Colors.redAccent,
-    Colors.orange,
-    Colors.purple,
-    Colors.amber,
-    Colors.indigo,
-    Colors.cyan,
-    Colors.brown,
-    Colors.pink,
-    Colors.lime,
-    Colors.deepOrange,
-    Colors.deepPurple,
-    Colors.lightBlue,
-    Colors.lightGreen,
-    Colors.yellow,
-    Colors.grey,
-  ];
-  int i = 0;
+  final categories = expenseCategories;
   return expenseMap.entries.map((e) {
-    final color = colors[i % colors.length];
-    i++;
+    final idx = categories.indexOf(e.key);
+    final color = expenseCategoryColors[idx % expenseCategoryColors.length];
     return PieChartSectionData(
       value: e.value,
       color: color,
