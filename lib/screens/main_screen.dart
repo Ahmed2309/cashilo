@@ -41,6 +41,16 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: selectedColor,
         foregroundColor: Colors.white,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_none_rounded),
+            tooltip: 'Notifications',
+            onPressed: () {
+              // TODO: Handle notification tap
+            },
+          ),
+          // Add more IconButton widgets here if you want more actions
+        ],
       ),
       drawer: Drawer(
         shape: const RoundedRectangleBorder(
@@ -52,14 +62,14 @@ class _MainScreenState extends State<MainScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: selectedColor,
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                   topRight: Radius.circular(32),
                 ),
               ),
-              child: const Center(
+              child: Center(
                 child: Text(
                   'Cashilo',
                   style: TextStyle(

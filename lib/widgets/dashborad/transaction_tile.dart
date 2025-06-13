@@ -16,11 +16,11 @@ class TransactionTile extends StatelessWidget {
         : AppColors.error.withOpacity(0.12);
     final chipTextColor = isIncome ? AppColors.secondary : AppColors.error;
 
-    return Card(
-      color: AppColors.card,
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          vertical: 6), // Add vertical space between tiles
       child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: CircleAvatar(
           backgroundColor: AppColors.primary.withOpacity(0.10),
           child: Icon(
@@ -35,39 +35,55 @@ class TransactionTile extends StatelessWidget {
           style: TextStyle(
             color: AppColors.headline,
             fontWeight: FontWeight.w600,
+            overflow: TextOverflow.ellipsis,
           ),
+          maxLines: 1,
         ),
         subtitle: Text(
           '${transaction.date.year}-${transaction.date.month.toString().padLeft(2, '0')}-${transaction.date.day.toString().padLeft(2, '0')}'
           '${transaction.note.isNotEmpty ? " • ${transaction.note}" : ""}',
           style: TextStyle(color: AppColors.primaryText, fontSize: 13),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '$amountPrefix\$${transaction.amount.toStringAsFixed(2)}',
-              style: TextStyle(
-                color: amountColor,
-                fontWeight: FontWeight.bold,
+        trailing: SizedBox(
+          width: 100,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Text(
+                  '$amountPrefix\$${transaction.amount.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    color: amountColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  maxLines: 1,
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            Chip(
-              label: Text(
-                transaction.type,
-                style:
-                    const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+              const SizedBox(width: 8),
+              Chip(
+                label: Text(
+                  transaction.type,
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w500),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                backgroundColor: chipColor,
+                labelStyle: TextStyle(color: chipTextColor),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
-              backgroundColor: chipColor,
-              labelStyle: TextStyle(color: chipTextColor),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        tileColor: AppColors.card,
+        minVerticalPadding: 8,
       ),
     );
   }

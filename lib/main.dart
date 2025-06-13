@@ -23,52 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: AppStrings.appName,
-      theme: ThemeData(
-        scaffoldBackgroundColor: AppColors.background,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: AppColors.background,
-          foregroundColor: AppColors.primaryText,
-          elevation: 0,
-          titleTextStyle: TextStyle(
-            color: AppColors.headline,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-          ),
-        ),
-        colorScheme: ColorScheme.light(
-          primary: AppColors.primary,
-          secondary: AppColors.secondary,
-          background: AppColors.background,
-          error: AppColors.error,
-        ),
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
-          backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: AppColors.card,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
-            borderSide: BorderSide(color: AppColors.primary),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
-            borderSide: BorderSide(color: AppColors.primary),
-          ),
-          labelStyle: const TextStyle(color: AppColors.primaryText),
-          hintStyle: const TextStyle(color: AppColors.primaryText),
-        ),
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(color: AppColors.primaryText),
-          bodyLarge: TextStyle(color: AppColors.primaryText),
-          titleLarge: TextStyle(
-            color: AppColors.headline,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        useMaterial3: true,
-      ),
+      theme: ThemeData(),
       home: const MainScreen(),
     );
   }

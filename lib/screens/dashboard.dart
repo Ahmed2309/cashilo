@@ -242,10 +242,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ],
                 ),
-                ...displayedTransactions
-                    .map((tx) => TransactionTile(transaction: tx)),
+                displayedTransactions.isEmpty
+                    ? const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        child: Center(
+                          child: Text(
+                            'No transactions yet.',
+                            style: TextStyle(
+                              color: AppColors.primaryText,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      )
+                    : Column(
+                        children: displayedTransactions
+                            .map((tx) => TransactionTile(transaction: tx))
+                            .toList(),
+                      ),
 
-                // Add to Saving and Withdraw buttons
                 SavingActionButtons(
                   balance: balance,
                   activeGoals: activeGoals,

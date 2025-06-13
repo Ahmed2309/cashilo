@@ -104,7 +104,7 @@ class _GoalsScreenState extends State<GoalsScreen>
         elevation: 0,
         iconTheme: const IconThemeData(color: AppColors.primaryText),
         title: Text(
-          'Goals',
+          'My Goals',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: AppColors.headline,
                 fontWeight: FontWeight.bold,
@@ -113,7 +113,6 @@ class _GoalsScreenState extends State<GoalsScreen>
         bottom: TabBar(
           controller: _tabController,
           labelColor: AppColors.primary,
-          unselectedLabelColor: AppColors.primaryText,
           indicatorColor: AppColors.primary,
           tabs: const [
             Tab(text: 'Active Goals'),

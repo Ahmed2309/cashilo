@@ -1,8 +1,6 @@
-import 'package:cashilo/widgets/transaction/edit_transation_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import '../../../models/transaction_model.dart';
-import 'transation_tile_t.dart';
+import 'package:cashilo/widgets/transaction/transation_tile_t.dart';
+import '../../models/transaction_model.dart';
 import 'package:cashilo/constant.dart';
 
 class TransactionList extends StatelessWidget {
@@ -29,53 +27,18 @@ class TransactionList extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(vertical: 8),
       itemCount: transactions.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 4),
       itemBuilder: (context, index) {
         final tx = transactions[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          color: AppColors.card,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-          child: ListTile(
-            leading: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.edit, color: AppColors.primary),
-                  onPressed: () {
-                    final transactionBox =
-                        Hive.box<TransactionModel>('transactions');
-                    final key = transactionBox.keyAt(index);
-                    showDialog(
-                      context: context,
-                      builder: (context) => EditTransactionDialog(
-                        transactionBox: transactionBox,
-                        transactionKey: key,
-                        transaction: tx,
-                      ),
-                    );
-                  },
-                  tooltip: 'Edit',
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete, color: AppColors.error),
-                  onPressed: () {
-                    tx.delete();
-                  },
-                  tooltip: 'Delete',
-                ),
-              ],
-            ),
-            title: TransactionTile(
-              date: tx.date,
-              category: tx.category,
-              note: tx.note,
-              amount: tx.amount,
-              type: tx.type,
-            ),
-          ),
+        return TransactionTile(
+          date: tx.date,
+          category: tx.category,
+          note: tx.note,
+          amount: tx.amount,
+          type: tx.type,
         );
       },
     );

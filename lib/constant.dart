@@ -30,6 +30,11 @@ const List<String> incomeCategories = [
   'Salary',
   'Bonus',
   'Investment',
+  'Business',
+  'Gift',
+  'Refund',
+  'Freelance',
+  'Grants',
   'Other'
 ];
 
@@ -38,6 +43,21 @@ const List<String> expenseCategories = [
   'Shopping',
   'Bills',
   'Transport',
+  'Health',
+  'Education',
+  'Entertainment',
+  'Travel',
+  'Groceries',
+  'Rent',
+  'Utilities',
+  'Insurance',
+  'Subscriptions',
+  'Charity',
+  'Personal Care',
+  'Taxes',
+  'Loan Payment',
+  'Pets',
+  'Gifts',
   'Other'
 ];
 
