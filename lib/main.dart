@@ -3,6 +3,7 @@ import 'package:cashilo/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'screens/main_screen.dart';
+import 'constant.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,24 +22,51 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Cashilo',
+      title: AppStrings.appName,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        scaffoldBackgroundColor: AppColors.background,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: AppColors.background,
+          foregroundColor: AppColors.primaryText,
+          elevation: 0,
+          titleTextStyle: TextStyle(
+            color: AppColors.headline,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+        ),
+        colorScheme: ColorScheme.light(
+          primary: AppColors.primary,
+          secondary: AppColors.secondary,
+          background: AppColors.background,
+          error: AppColors.error,
+        ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: AppColors.card,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderSide: BorderSide(color: AppColors.primary),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderSide: BorderSide(color: AppColors.primary),
+          ),
+          labelStyle: const TextStyle(color: AppColors.primaryText),
+          hintStyle: const TextStyle(color: AppColors.primaryText),
+        ),
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(color: AppColors.primaryText),
+          bodyLarge: TextStyle(color: AppColors.primaryText),
+          titleLarge: TextStyle(
+            color: AppColors.headline,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         useMaterial3: true,
       ),
       home: const MainScreen(),

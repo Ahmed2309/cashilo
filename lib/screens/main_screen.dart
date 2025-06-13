@@ -1,3 +1,4 @@
+import 'package:cashilo/constant.dart';
 import 'package:cashilo/screens/dashboard.dart';
 import 'package:cashilo/screens/goals.dart';
 import 'package:cashilo/screens/reports.dart';
@@ -32,7 +33,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const Color selectedColor = Colors.deepPurple;
+    const Color selectedColor = AppColors.primary;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cashilo'),

@@ -5,6 +5,7 @@ import '../models/transaction_model.dart';
 import '../widgets/transaction/transaction_search_bar.dart';
 import '../widgets/transaction/transaction_filter_chips.dart';
 import '../widgets/transaction/transaction_list.dart';
+import 'package:cashilo/constant.dart';
 
 class TransactionsPage extends StatefulWidget {
   const TransactionsPage({super.key});
@@ -28,6 +29,13 @@ class _TransactionsPageState extends State<TransactionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        title: const Text('Transactions'),
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.primaryText,
+        elevation: 0,
+      ),
       body: Column(
         children: [
           TransactionSearchBar(
@@ -70,8 +78,8 @@ class _TransactionsPageState extends State<TransactionsPage> {
                 AddTransactionDialog(transactionBox: transactionBox),
           );
         },
-        backgroundColor: Colors.deepPurple,
-        child: const Icon(Icons.add),
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

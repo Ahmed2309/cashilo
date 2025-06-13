@@ -25,37 +25,71 @@ class SavingActionButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        ElevatedButton.icon(
-          icon: const Icon(Icons.savings),
-          label: const Text('Add to Saving'),
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => AddToSavingDialog(
-                balance: balance,
-                activeGoals: activeGoals,
-                transactionBox: transactionBox,
-                onSaved: onSaved,
+        Expanded(
+          child: ElevatedButton.icon(
+            icon: const Icon(Icons.savings, color: Colors.white),
+            label: const Text(
+              'Add to Saving',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                letterSpacing: 0.5,
               ),
-            );
-          },
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.deepPurple,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+              elevation: 3,
+              shadowColor: Colors.deepPurple.withOpacity(0.2),
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AddToSavingDialog(
+                  balance: balance,
+                  activeGoals: activeGoals,
+                  transactionBox: transactionBox,
+                  onSaved: onSaved,
+                ),
+              );
+            },
+          ),
         ),
-        const SizedBox(width: 12),
-        ElevatedButton.icon(
-          icon: const Icon(Icons.remove_circle, color: Colors.orange),
-          label: const Text('Withdraw'),
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => WithdrawFromSavingDialog(
-                goalsWithSavings: goalsWithSavings,
-                transactionBox: transactionBox,
-                onSaved: onSaved,
+        const SizedBox(width: 16),
+        Expanded(
+          child: ElevatedButton.icon(
+            icon: const Icon(Icons.remove_circle, color: Colors.white),
+            label: const Text(
+              'Withdraw',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                letterSpacing: 0.5,
               ),
-            );
-          },
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+              elevation: 3,
+              shadowColor: Colors.orange.withOpacity(0.2),
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => WithdrawFromSavingDialog(
+                  goalsWithSavings: goalsWithSavings,
+                  transactionBox: transactionBox,
+                  onSaved: onSaved,
+                ),
+              );
+            },
+          ),
         ),
       ],
     );

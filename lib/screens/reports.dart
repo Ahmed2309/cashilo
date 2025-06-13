@@ -3,6 +3,10 @@ import 'package:cashilo/models/transaction_model.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:cashilo/widgets/reports/reports_pie_charts.dart';
+import 'package:cashilo/widgets/reports/reports_bar_chart.dart';
+import 'package:cashilo/widgets/reports/monthly_breakdown_list.dart';
+import 'package:cashilo/constant.dart';
 
 class ReportsScreen extends StatelessWidget {
   const ReportsScreen({super.key});
@@ -53,8 +57,10 @@ class ReportsScreen extends StatelessWidget {
         BarChartGroupData(
           x: i,
           barRods: [
-            BarChartRodData(toY: monthIncome, color: Colors.green, width: 8),
-            BarChartRodData(toY: monthExpense, color: Colors.red, width: 8),
+            BarChartRodData(
+                toY: monthIncome, color: AppColors.secondary, width: 8),
+            BarChartRodData(
+                toY: monthExpense, color: AppColors.error, width: 8),
           ],
         ),
       );
@@ -67,22 +73,22 @@ class ReportsScreen extends StatelessWidget {
         ? <PieChartSectionData>[
             PieChartSectionData(
               value: totalIncome,
-              color: Colors.green,
-              title: 'Income',
+              color: AppColors.secondary,
+              title: AppStrings.income,
               radius: 40,
               titleStyle: const TextStyle(fontSize: 14, color: Colors.white),
             ),
             PieChartSectionData(
               value: totalExpense,
-              color: Colors.red,
-              title: 'Expense',
+              color: AppColors.error,
+              title: AppStrings.expense,
               radius: 40,
               titleStyle: const TextStyle(fontSize: 14, color: Colors.white),
             ),
             PieChartSectionData(
               value: totalSaving,
-              color: Colors.deepPurple,
-              title: 'Saving',
+              color: AppColors.primary,
+              title: AppStrings.saving,
               radius: 40,
               titleStyle: const TextStyle(fontSize: 14, color: Colors.white),
             ),
@@ -90,7 +96,7 @@ class ReportsScreen extends StatelessWidget {
         : [
             PieChartSectionData(
               value: 1,
-              color: Colors.grey[300]!,
+              color: AppColors.card,
               title: 'No Data',
               radius: 40,
               titleStyle: const TextStyle(fontSize: 14, color: Colors.black54),
@@ -98,109 +104,42 @@ class ReportsScreen extends StatelessWidget {
           ];
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Reports'),
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.primaryText,
+        elevation: 0,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           Text(
             'Overview',
-            style: Theme.of(context).textTheme.titleMedium,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: AppColors.headline,
+                ),
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            height: 180,
-            child: PieChart(
-              PieChartData(
-                sections: pieSections,
-                centerSpaceRadius: 32,
-                sectionsSpace: 2,
-              ),
-            ),
-          ),
+          ReportsPieChart(sections: pieSections),
           const SizedBox(height: 24),
           Text(
             'Monthly Income & Expenses',
-            style: Theme.of(context).textTheme.titleMedium,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: AppColors.headline,
+                ),
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            height: 200,
-            child: barGroups.isNotEmpty
-                ? BarChart(
-                    BarChartData(
-                      barGroups: barGroups,
-                      titlesData: FlTitlesData(
-                        leftTitles: AxisTitles(
-                          sideTitles: SideTitles(showTitles: true),
-                        ),
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            getTitlesWidget: (double value, TitleMeta meta) {
-                              if (value < 0 || value >= sortedMonths.length) {
-                                return const SizedBox.shrink();
-                              }
-                              final month = sortedMonths[value.toInt()];
-                              return Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Text(
-                                  DateFormat('MMM')
-                                      .format(DateTime.parse('$month-01')),
-                                  style: const TextStyle(fontSize: 10),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        rightTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                        topTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                      ),
-                      gridData: FlGridData(show: false),
-                      borderData: FlBorderData(show: false),
-                      groupsSpace: 16,
-                      barTouchData: BarTouchData(enabled: false),
-                    ),
-                  )
-                : Center(child: Text('No monthly data')),
-          ),
+          ReportsBarChart(barGroups: barGroups, sortedMonths: sortedMonths),
           const SizedBox(height: 24),
           Text(
             'Monthly Breakdown',
-            style: Theme.of(context).textTheme.titleMedium,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: AppColors.headline,
+                ),
           ),
           const SizedBox(height: 8),
-          ...monthlyGroups.entries.map((entry) {
-            final month = entry.key;
-            final txs = entry.value;
-            double monthIncome = 0;
-            double monthExpense = 0;
-            double monthSaving = 0;
-            for (final tx in txs) {
-              if (tx.type.toLowerCase() == 'income') {
-                monthIncome += tx.amount;
-              } else if (tx.type.toLowerCase() == 'expense') {
-                monthExpense += tx.amount;
-              }
-              if (tx.category == 'Saving') {
-                monthSaving += tx.amount;
-              }
-            }
-            return Card(
-              child: ListTile(
-                title: Text(DateFormat('MMMM yyyy')
-                    .format(DateTime.parse('$month-01'))),
-                subtitle: Text(
-                  'Income: \$${monthIncome.toStringAsFixed(2)}\n'
-                  'Expenses: \$${monthExpense.toStringAsFixed(2)}\n'
-                  'Saved: \$${monthSaving.toStringAsFixed(2)}',
-                ),
-              ),
-            );
-          }),
+          MonthlyBreakdownList(monthlyGroups: monthlyGroups),
         ],
       ),
     );

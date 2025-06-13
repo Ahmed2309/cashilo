@@ -5,6 +5,7 @@ import 'package:hive/hive.dart';
 import '../models/transaction_model.dart';
 import '../widgets/goals/goal_add_dialog.dart';
 import '../widgets/goals/edit_goal_dialog.dart';
+import 'package:cashilo/constant.dart';
 
 class GoalsScreen extends StatefulWidget {
   const GoalsScreen({super.key});
@@ -97,9 +98,23 @@ class _GoalsScreenState extends State<GoalsScreen>
         .toList();
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: AppColors.primaryText),
+        title: Text(
+          'Goals',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: AppColors.headline,
+                fontWeight: FontWeight.bold,
+              ),
+        ),
         bottom: TabBar(
           controller: _tabController,
+          labelColor: AppColors.primary,
+          unselectedLabelColor: AppColors.primaryText,
+          indicatorColor: AppColors.primary,
           tabs: const [
             Tab(text: 'Active Goals'),
             Tab(text: 'Stopped/Completed'),
@@ -109,7 +124,12 @@ class _GoalsScreenState extends State<GoalsScreen>
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: goals.isEmpty
-            ? const Center(child: Text('No goals yet. Tap + to add one!'))
+            ? const Center(
+                child: Text(
+                  'No goals yet. Tap + to add one!',
+                  style: TextStyle(color: AppColors.primaryText),
+                ),
+              )
             : TabBarView(
                 controller: _tabController,
                 children: [
@@ -191,9 +211,9 @@ class _GoalsScreenState extends State<GoalsScreen>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addGoal,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: AppColors.primary,
         tooltip: 'Add Goal',
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

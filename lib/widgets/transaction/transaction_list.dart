@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../../../models/transaction_model.dart';
 import 'transation_tile_t.dart';
+import 'package:cashilo/constant.dart';
 
 class TransactionList extends StatelessWidget {
   final List<TransactionModel> transactions;
@@ -16,12 +17,12 @@ class TransactionList extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.receipt_long_rounded, size: 80, color: Colors.grey[300]),
+            Icon(Icons.receipt_long_rounded, size: 80, color: AppColors.card),
             const SizedBox(height: 16),
             const Text(
               'No transactions yet.\nTap + to add one!',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey, fontSize: 18),
+              style: TextStyle(color: AppColors.primaryText, fontSize: 18),
             ),
           ],
         ),
@@ -34,12 +35,15 @@ class TransactionList extends StatelessWidget {
         final tx = transactions[index];
         return Card(
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          color: AppColors.card,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           child: ListTile(
             leading: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue),
+                  icon: const Icon(Icons.edit, color: AppColors.primary),
                   onPressed: () {
                     final transactionBox =
                         Hive.box<TransactionModel>('transactions');
@@ -56,7 +60,7 @@ class TransactionList extends StatelessWidget {
                   tooltip: 'Edit',
                 ),
                 IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
+                  icon: const Icon(Icons.delete, color: AppColors.error),
                   onPressed: () {
                     tx.delete();
                   },

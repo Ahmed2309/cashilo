@@ -1,3 +1,4 @@
+import 'package:cashilo/constant.dart';
 import 'package:cashilo/models/goals_model.dart';
 import 'package:cashilo/models/transaction_model.dart';
 import 'package:cashilo/widgets/dashborad/summary_card.dart';
@@ -27,6 +28,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final double savingGoal = getTotalPeriodSavingGoal();
 
     return Scaffold(
+      backgroundColor: AppColors.background, // Set background color
       body: ValueListenableBuilder(
         valueListenable:
             Hive.box<TransactionModel>('transactions').listenable(),
@@ -125,127 +127,135 @@ class _DashboardScreenState extends State<DashboardScreen> {
               .toList();
 
           return SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Dashboard',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Dashboard',
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.headline,
+                      ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  monthYear,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: AppColors.primaryText,
+                      ),
+                ),
+                const SizedBox(height: 24),
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SummaryCard(
+                            icon: Icons.attach_money_rounded,
+                            label: AppStrings.income,
+                            amount: totalIncome,
+                            color: AppColors.secondary,
+                          ),
                         ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    monthYear,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(color: Colors.grey[600]),
-                  ),
-                  const SizedBox(height: 24),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: SummaryCard(
-                              icon: Icons.attach_money_rounded,
-                              label: 'Income',
-                              amount: totalIncome,
-                              color: Colors.green,
-                            ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: SummaryCard(
+                            icon: Icons.money_off_rounded,
+                            label: AppStrings.expense,
+                            amount: totalExpenses,
+                            color: AppColors.error,
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: SummaryCard(
-                              icon: Icons.money_off_rounded,
-                              label: 'Expenses',
-                              amount: totalExpenses,
-                              color: Colors.red,
-                            ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SummaryCard(
+                            icon: Icons.account_balance_wallet_rounded,
+                            label: AppStrings.balance,
+                            amount: totalIncome - totalExpenses,
+                            color: AppColors.primary,
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: SummaryCard(
-                              icon: Icons.account_balance_wallet_rounded,
-                              label: 'Balance',
-                              amount: totalIncome - totalExpenses,
-                              color: Colors.blue,
-                            ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: SummaryCard(
+                            icon: Icons.savings,
+                            label: AppStrings.saving,
+                            amount: savings,
+                            color: AppColors.headline,
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: SummaryCard(
-                              icon: Icons.savings,
-                              label: 'Total Saving',
-                              amount: savings,
-                              color: Colors.deepPurple,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
 
-                  // Saving Goal Progress
-                  Text(
-                    'Monthly Saving Goal Progress',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  LinearProgressIndicator(
-                    value: savingProgress.toDouble(),
-                    minHeight: 14,
-                    backgroundColor: Colors.grey[200],
-                    color: Colors.deepPurple,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    monthlyGoalReached
-                        ? "Congratulations! You've reached your monthly saving goal (\$${savingGoal.toStringAsFixed(2)})."
-                        : "You've saved ${(savingProgress * 100).toStringAsFixed(0)}% of your goal (\$${savings.toStringAsFixed(2)} / \$${savingGoal.toStringAsFixed(2)}).",
-                    style: TextStyle(color: Colors.grey[700]),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // 4. Recent Transactions
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Recent Transactions',
-                        style: Theme.of(context).textTheme.titleMedium,
+                // Saving Goal Progress
+                Text(
+                  'Monthly Saving Goal Progress',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: AppColors.headline,
                       ),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            showAll = !showAll;
-                          });
-                        },
-                        child: Text(showAll ? 'Show Less' : 'See All'),
-                      ),
-                    ],
-                  ),
-                  ...displayedTransactions
-                      .map((tx) => TransactionTile(transaction: tx)),
+                ),
+                const SizedBox(height: 8),
+                LinearProgressIndicator(
+                  value: savingProgress.toDouble(),
+                  minHeight: 14,
+                  backgroundColor: AppColors.card,
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  monthlyGoalReached
+                      ? "Congratulations! You've reached your monthly saving goal (\$${savingGoal.toStringAsFixed(2)})."
+                      : "You've saved ${(savingProgress * 100).toStringAsFixed(0)}% of your goal (\$${savings.toStringAsFixed(2)} / \$${savingGoal.toStringAsFixed(2)}).",
+                  style: TextStyle(color: AppColors.primaryText),
+                ),
+                const SizedBox(height: 24),
 
-                  // Add to Saving and Withdraw buttons
-                  SavingActionButtons(
-                    balance: balance,
-                    activeGoals: activeGoals,
-                    goalsWithSavings: goalsWithSavings,
-                    transactionBox: Hive.box<TransactionModel>('transactions'),
-                    onSaved: () => setState(() {}),
-                  ),
-                ],
-              ));
+                // Recent Transactions
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Recent Transactions',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: AppColors.headline,
+                          ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          showAll = !showAll;
+                        });
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.primary,
+                      ),
+                      child: Text(showAll ? 'Show Less' : 'See All'),
+                    ),
+                  ],
+                ),
+                ...displayedTransactions
+                    .map((tx) => TransactionTile(transaction: tx)),
+
+                // Add to Saving and Withdraw buttons
+                SavingActionButtons(
+                  balance: balance,
+                  activeGoals: activeGoals,
+                  goalsWithSavings: goalsWithSavings,
+                  transactionBox: Hive.box<TransactionModel>('transactions'),
+                  onSaved: () => setState(() {}),
+                ),
+              ],
+            ),
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -256,7 +266,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             builder: (context) => AddTransactionDialog(transactionBox: box),
           );
         },
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: AppColors.primary,
         child: const Icon(Icons.add),
       ),
     );

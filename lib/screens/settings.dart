@@ -4,6 +4,7 @@ import 'package:cashilo/models/transaction_model.dart';
 import 'package:hive/hive.dart';
 import 'package:cashilo/widgets/settings/language_selector.dart';
 import 'package:cashilo/widgets/settings/currency_selector.dart';
+import 'package:cashilo/constant.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -25,8 +26,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Settings'),
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.primaryText,
+        elevation: 0,
       ),
       body: ListView(
         children: [
@@ -53,10 +58,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.notifications),
-            title: const Text('Enable Notifications'),
+            leading: const Icon(Icons.notifications, color: AppColors.primary),
+            title: const Text('Enable Notifications',
+                style: TextStyle(color: AppColors.primaryText)),
             trailing: Switch(
               value: notificationsEnabled,
+              activeColor: AppColors.primary,
               onChanged: (val) {
                 setState(() {
                   notificationsEnabled = val;
@@ -66,10 +73,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.dark_mode),
-            title: const Text('Dark Mode'),
+            leading: const Icon(Icons.dark_mode, color: AppColors.primary),
+            title: const Text('Dark Mode',
+                style: TextStyle(color: AppColors.primaryText)),
             trailing: Switch(
               value: darkMode,
+              activeColor: AppColors.primary,
               onChanged: (val) {
                 setState(() {
                   darkMode = val;
@@ -80,10 +89,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.delete_forever, color: Colors.red),
-            title: const Text('Clear All Data'),
-            subtitle:
-                const Text('This will delete all your goals and transactions.'),
+            leading: const Icon(Icons.delete_forever, color: AppColors.error),
+            title: const Text('Clear All Data',
+                style: TextStyle(color: AppColors.primaryText)),
+            subtitle: const Text(
+              'This will delete all your goals and transactions.',
+              style: TextStyle(color: AppColors.primaryText),
+            ),
             onTap: () async {
               final confirm = await showDialog<bool>(
                 context: context,
@@ -98,8 +110,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     ElevatedButton(
                       onPressed: () => Navigator.pop(context, true),
-                      style:
-                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.error,
+                        foregroundColor: Colors.white,
+                      ),
                       child: const Text('Delete'),
                     ),
                   ],
@@ -118,10 +132,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.info_outline),
-            title: const Text('About'),
-            subtitle:
-                const Text('Cashilo v1.0\nA simple savings and goals tracker.'),
+            leading: const Icon(Icons.info_outline, color: AppColors.primary),
+            title: const Text('About',
+                style: TextStyle(color: AppColors.primaryText)),
+            subtitle: const Text(
+              'Cashilo v1.0\nA simple savings and goals tracker.',
+              style: TextStyle(color: AppColors.primaryText),
+            ),
           ),
         ],
       ),
