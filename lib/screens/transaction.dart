@@ -1,3 +1,4 @@
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:cashilo/widgets/transaction/add_transaction_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -34,11 +35,9 @@ class _TransactionsPageState extends State<TransactionsPage> {
         children: [
           const SizedBox(height: 16),
           Text(
-            'Transactions',
+            AppLocalizations.of(context)!.transactions,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.headline,
-                ),
+                fontWeight: FontWeight.bold, color: AppColors.headline),
           ),
           const SizedBox(height: 10),
           TransactionSearchBar(

@@ -1,3 +1,4 @@
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cashilo/constant.dart';
@@ -73,7 +74,9 @@ class TransactionTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                type,
+                type == 'Income'
+                    ? AppLocalizations.of(context)!.income
+                    : AppLocalizations.of(context)!.expense,
                 style: TextStyle(
                   color: chipTextColor,
                   fontSize: 12,

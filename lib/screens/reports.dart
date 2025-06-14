@@ -7,6 +7,7 @@ import 'package:cashilo/widgets/reports/reports_pie_charts.dart';
 import 'package:cashilo/widgets/reports/reports_bar_chart.dart';
 import 'package:cashilo/widgets/reports/monthly_breakdown_list.dart';
 import 'package:cashilo/constant.dart';
+import 'package:cashilo/utils/category_helper.dart';
 
 enum ChartRange { today, lastWeek, lastMonth, lastSixMonth, lastYear }
 
@@ -61,9 +62,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
         break;
     }
 
-    final filteredTransactions = allTransactions
-        .where((tx) => tx.date.isAfter(start.subtract(const Duration(days: 1))))
-        .toList();
+    final filteredTransactions =
+        allTransactions.where((tx) => tx.date.isAfter(start)).toList();
 
     // PIE CHART DATA
     double totalIncome = 0;
@@ -89,6 +89,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
     final mainPieSections = hasPieData
         ? buildMainPieSections(
+            context,
             totalIncome: totalIncome,
             totalExpense: totalExpense,
             totalSaving: totalSaving,
@@ -104,7 +105,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
           ];
 
     final incomePieSections = incomeMap.isNotEmpty
-        ? buildIncomePieSections(context, incomeMap)
+        ? buildExpensePieSections(
+            context, getLocalizedCategoryMap(context, incomeMap))
         : [
             PieChartSectionData(
               value: 1,
@@ -116,7 +118,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
           ];
 
     final expensePieSections = expenseMap.isNotEmpty
-        ? buildExpensePieSections(context, expenseMap)
+        ? buildExpensePieSections(
+            context, getLocalizedCategoryMap(context, expenseMap))
         : [
             PieChartSectionData(
               value: 1,

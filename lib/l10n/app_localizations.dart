@@ -297,6 +297,10 @@ abstract class AppLocalizations {
   String get withDraw;
   String get withdrawFromAll;
   String amountWithMax(String max);
+  String get savingN;
+  String get saveButton;
+  String get editTransaction;
+  String get searchTransaction;
 }
 
 class _AppLocalizationsDelegate

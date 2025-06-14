@@ -164,4 +164,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get withdrawFromAll => 'Withdraw from All Savings';
   @override
   String amountWithMax(String max) => 'Max amount $max';
+  @override
+  String get savingN => 'Saving';
+  @override
+  String get saveButton => 'Save';
+  @override
+  String get editTransaction => 'Edit Transaction';
+  @override
+  String get searchTransaction => 'Search Transaction';
 }

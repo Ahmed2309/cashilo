@@ -22,12 +22,53 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final income = AppLocalizations.of(context)!.incomeCategories;
-    final expense = AppLocalizations.of(context)!.expenseCategories;
-    final categories = type == 'Income' ? income : expense;
+    final l = AppLocalizations.of(context)!;
 
-    if (category.isEmpty && categories.isNotEmpty) {
-      category = categories.first;
+    // English categories (used for saving)
+    final englishIncome = [
+      'Salary',
+      'Bonus',
+      'Investment',
+      'Business',
+      'Gift',
+      'Refund',
+      'Freelance',
+      'Grants',
+      'Other'
+    ];
+    final englishExpense = [
+      'Food',
+      'Shopping',
+      'Bills',
+      'Transport',
+      'Health',
+      'Education',
+      'Entertainment',
+      'Travel',
+      'Groceries',
+      'Rent',
+      'Utilities',
+      'Insurance',
+      'Subscriptions',
+      'Charity',
+      'Personal Care',
+      'Taxes',
+      'Loan Payment',
+      'Pets',
+      'Gifts',
+      'Other'
+    ];
+
+    // Localized display
+    final localizedIncome = l.incomeCategories;
+    final localizedExpense = l.expenseCategories;
+
+    final displayCategories =
+        type == 'Income' ? localizedIncome : localizedExpense;
+    final englishCategories = type == 'Income' ? englishIncome : englishExpense;
+
+    if (category.isEmpty && displayCategories.isNotEmpty) {
+      category = displayCategories.first;
     }
 
     return Dialog(
@@ -51,7 +92,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  AppLocalizations.of(context)!.addTransaction,
+                  l.addTransaction,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.deepPurple,
@@ -63,22 +104,23 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                   items: [
                     DropdownMenuItem(
                       value: 'Income',
-                      child: Text(AppLocalizations.of(context)!.income),
+                      child: Text(l.income),
                     ),
                     DropdownMenuItem(
                       value: 'Expense',
-                      child: Text(AppLocalizations.of(context)!.expense),
+                      child: Text(l.expense),
                     ),
                   ],
                   onChanged: (val) {
                     setState(() {
                       type = val ?? 'Income';
-                      final newCategories = type == 'Income' ? income : expense;
+                      final newCategories =
+                          type == 'Income' ? localizedIncome : localizedExpense;
                       category = newCategories.first;
                     });
                   },
                   decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context)!.type,
+                    labelText: l.type,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
@@ -86,14 +128,14 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 const SizedBox(height: 14),
                 DropdownButtonFormField<String>(
                   value: category,
-                  items: categories
+                  items: displayCategories
                       .map((cat) =>
                           DropdownMenuItem(value: cat, child: Text(cat)))
                       .toList(),
                   onChanged: (val) =>
-                      setState(() => category = val ?? categories.first),
+                      setState(() => category = val ?? displayCategories.first),
                   decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context)!.category,
+                    labelText: l.category,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
@@ -101,7 +143,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 const SizedBox(height: 14),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context)!.amount,
+                    labelText: l.amount,
                     prefixIcon: const Icon(Icons.attach_money),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12)),
@@ -109,7 +151,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                   keyboardType: TextInputType.number,
                   onChanged: (val) => amount = double.tryParse(val) ?? 0,
                   validator: (val) => (double.tryParse(val ?? '') ?? 0) <= 0
-                      ? AppLocalizations.of(context)!.enterValidAmount
+                      ? l.enterValidAmount
                       : null,
                 ),
                 const SizedBox(height: 14),
@@ -139,7 +181,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                             size: 20, color: Colors.deepPurple),
                         const SizedBox(width: 10),
                         Text(
-                          '${AppLocalizations.of(context)!.pickDate}: ${date.toLocal().toString().split(' ')[0]}',
+                          '${l.pickDate}: ${date.toLocal().toString().split(' ')[0]}',
                           style: const TextStyle(fontSize: 15),
                         ),
                       ],
@@ -156,7 +198,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                         textStyle: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       onPressed: () => Navigator.pop(context),
-                      child: Text(AppLocalizations.of(context)!.cancel),
+                      child: Text(l.cancel),
                     ),
                     const SizedBox(width: 12),
                     ElevatedButton(
@@ -172,13 +214,16 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
+                          final englishCategory = englishCategories[
+                              displayCategories.indexOf(category)];
+
                           final newTx = TransactionModel(
                             id: DateTime.now()
                                 .millisecondsSinceEpoch
                                 .toString(),
                             type: type,
                             amount: amount,
-                            category: category,
+                            category: englishCategory, // save in English
                             date: date,
                             note: '',
                           );
@@ -186,7 +231,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                           Navigator.pop(context);
                         }
                       },
-                      child: Text(AppLocalizations.of(context)!.add),
+                      child: Text(l.add),
                     ),
                   ],
                 ),

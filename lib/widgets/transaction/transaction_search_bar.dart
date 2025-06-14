@@ -1,3 +1,4 @@
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:cashilo/constant.dart';
 
@@ -18,7 +19,7 @@ class TransactionSearchBar extends StatelessWidget {
       child: TextField(
         style: const TextStyle(color: AppColors.primaryText),
         decoration: InputDecoration(
-          hintText: 'Search by note or category',
+          hintText: AppLocalizations.of(context)!.searchTransaction,
           hintStyle: const TextStyle(color: AppColors.primaryText),
           prefixIcon: const Icon(Icons.search, color: AppColors.primary),
           border: OutlineInputBorder(

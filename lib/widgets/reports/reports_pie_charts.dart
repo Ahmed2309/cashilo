@@ -104,7 +104,8 @@ class ReportsPieChart extends StatelessWidget {
 }
 
 // Helper to generate pie chart sections for different breakdowns
-List<PieChartSectionData> buildMainPieSections({
+List<PieChartSectionData> buildMainPieSections(
+  BuildContext context, {
   required double totalIncome,
   required double totalExpense,
   required double totalSaving,
@@ -113,7 +114,7 @@ List<PieChartSectionData> buildMainPieSections({
     PieChartSectionData(
       value: totalIncome,
       color: AppColors.secondary,
-      title: 'Income',
+      title: AppLocalizations.of(context)!.income,
       radius: 40,
       titleStyle: const TextStyle(
           fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
@@ -121,7 +122,7 @@ List<PieChartSectionData> buildMainPieSections({
     PieChartSectionData(
       value: totalExpense,
       color: AppColors.error,
-      title: 'Expense',
+      title: AppLocalizations.of(context)!.expense,
       radius: 40,
       titleStyle: const TextStyle(
           fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
@@ -129,7 +130,7 @@ List<PieChartSectionData> buildMainPieSections({
     PieChartSectionData(
       value: totalSaving,
       color: AppColors.primary,
-      title: 'Saving',
+      title: AppLocalizations.of(context)!.saving,
       radius: 40,
       titleStyle: const TextStyle(
           fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),

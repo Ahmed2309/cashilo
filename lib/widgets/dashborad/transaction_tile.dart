@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cashilo/constant.dart';
 import '../../models/transaction_model.dart';
+import '../../utils/category_helper.dart';
 
 class TransactionTile extends StatelessWidget {
   final TransactionModel transaction;
@@ -17,24 +18,6 @@ class TransactionTile extends StatelessWidget {
         ? AppColors.secondary.withOpacity(0.12)
         : AppColors.error.withOpacity(0.12);
     final chipTextColor = isIncome ? AppColors.secondary : AppColors.error;
-
-    final expenseCategories = AppLocalizations.of(context)!.expenseCategories;
-    final incomeCategories = AppLocalizations.of(context)!.incomeCategories;
-
-    String localizedCategory;
-    if (transaction.type.toLowerCase() == 'income') {
-      localizedCategory = incomeCategories.firstWhere(
-        (category) =>
-            category.toLowerCase() == transaction.category.toLowerCase(),
-        orElse: () => transaction.category,
-      );
-    } else {
-      localizedCategory = expenseCategories.firstWhere(
-        (category) =>
-            category.toLowerCase() == transaction.category.toLowerCase(),
-        orElse: () => transaction.category,
-      );
-    }
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       color: AppColors.card,
@@ -51,9 +34,8 @@ class TransactionTile extends StatelessWidget {
           ),
         ),
         title: Text(
-          localizedCategory,
+          getLocalizedCategory(context, transaction.category),
           style: const TextStyle(
-            color: AppColors.headline,
             fontWeight: FontWeight.w600,
             fontSize: 16,
             overflow: TextOverflow.ellipsis,

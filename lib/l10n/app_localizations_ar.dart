@@ -172,4 +172,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get withdrawFromAll => 'سحب من جميع الأهداف النشطة';
   @override
   String amountWithMax(String max) => 'مبلغ الحد الاقصى $max';
+  @override
+  String get savingN => 'للإدخار';
+  @override
+  String get saveButton => 'حفظ';
+  @override
+  String get editTransaction => 'تعديل المعاملة';
+  @override
+  String get searchTransaction => 'البحث عن معاملة';
 }

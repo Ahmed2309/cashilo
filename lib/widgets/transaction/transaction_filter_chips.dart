@@ -1,3 +1,4 @@
+import 'package:cashilo/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:cashilo/constant.dart';
 
@@ -19,7 +20,7 @@ class TransactionFilterChips extends StatelessWidget {
       child: Row(
         children: [
           ChoiceChip(
-            label: const Text('All'),
+            label: Text(AppLocalizations.of(context)!.seeAll),
             selected: selectedType == 'All',
             selectedColor: AppColors.primary,
             backgroundColor: AppColors.card,
@@ -39,7 +40,7 @@ class TransactionFilterChips extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           ChoiceChip(
-            label: const Text('Income'),
+            label: Text(AppLocalizations.of(context)!.income),
             selected: selectedType == 'Income',
             selectedColor: AppColors.secondary,
             backgroundColor: AppColors.card,
@@ -61,7 +62,7 @@ class TransactionFilterChips extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           ChoiceChip(
-            label: const Text('Expense'),
+            label: Text(AppLocalizations.of(context)!.expense),
             selected: selectedType == 'Expense',
             selectedColor: AppColors.error,
             backgroundColor: AppColors.card,

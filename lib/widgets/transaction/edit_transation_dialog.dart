@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../../../models/transaction_model.dart';
 import 'package:cashilo/constant.dart';
+import 'package:cashilo/l10n/app_localizations.dart';
 
 class EditTransactionDialog extends StatefulWidget {
   final Box<TransactionModel> transactionBox;
@@ -26,20 +27,6 @@ class _EditTransactionDialogState extends State<EditTransactionDialog> {
   late double amount;
   late DateTime date;
 
-  final List<String> incomeCategories = [
-    'Salary',
-    'Bonus',
-    'Investment',
-    'Other'
-  ];
-  final List<String> expenseCategories = [
-    'Food',
-    'Shopping',
-    'Bills',
-    'Transport',
-    'Other'
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -49,15 +36,68 @@ class _EditTransactionDialogState extends State<EditTransactionDialog> {
     date = widget.transaction.date;
   }
 
+  String getEnglishCategory(
+    String localized,
+    List<String> english,
+    List<String> localizedList,
+  ) {
+    final index = localizedList.indexOf(localized);
+    return index != -1 ? english[index] : localized;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final categories = type == 'Income' ? incomeCategories : expenseCategories;
+    final incomeLocalized = AppLocalizations.of(context)!.incomeCategories;
+    final expenseLocalized = AppLocalizations.of(context)!.expenseCategories;
+    final incomeEnglish = [
+      'Salary',
+      'Bonus',
+      'Investment',
+      'Business',
+      'Gift',
+      'Refund',
+      'Freelance',
+      'Grants',
+      'Other'
+    ];
+    final expenseEnglish = [
+      'Food',
+      'Shopping',
+      'Bills',
+      'Transport',
+      'Health',
+      'Education',
+      'Entertainment',
+      'Travel',
+      'Groceries',
+      'Rent',
+      'Utilities',
+      'Insurance',
+      'Subscriptions',
+      'Charity',
+      'Personal Care',
+      'Taxes',
+      'Loan Payment',
+      'Pets',
+      'Gifts',
+      'Saving',
+      'Other'
+    ];
+
+    final categories = type == 'Income' ? incomeLocalized : expenseLocalized;
+
+    // Display category in localized form
+    final localizedCategoryIndex =
+        (type == 'Income' ? incomeEnglish : expenseEnglish).indexOf(category);
+    final displayedCategory = localizedCategoryIndex != -1
+        ? categories[localizedCategoryIndex]
+        : category;
 
     return AlertDialog(
       backgroundColor: AppColors.background,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       title: Text(
-        'Edit Transaction',
+        AppLocalizations.of(context)!.editTransaction,
         style: Theme.of(context).textTheme.titleLarge?.copyWith(
               color: AppColors.primary,
               fontWeight: FontWeight.bold,
@@ -71,21 +111,26 @@ class _EditTransactionDialogState extends State<EditTransactionDialog> {
             children: [
               DropdownButtonFormField<String>(
                 value: type,
-                items: const [
-                  DropdownMenuItem(value: 'Income', child: Text('Income')),
-                  DropdownMenuItem(value: 'Expense', child: Text('Expense')),
+                items: [
+                  DropdownMenuItem(
+                    value: 'Income',
+                    child: Text(AppLocalizations.of(context)!.income),
+                  ),
+                  DropdownMenuItem(
+                    value: 'Expense',
+                    child: Text(AppLocalizations.of(context)!.expense),
+                  ),
                 ],
                 onChanged: (val) {
                   setState(() {
                     type = val ?? 'Income';
-                    category = (type == 'Income'
-                            ? incomeCategories
-                            : expenseCategories)
-                        .first;
+                    category =
+                        (type == 'Income' ? incomeLocalized : expenseLocalized)
+                            .first;
                   });
                 },
                 decoration: InputDecoration(
-                  labelText: 'Type',
+                  labelText: AppLocalizations.of(context)!.type,
                   labelStyle: const TextStyle(color: AppColors.primaryText),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -102,15 +147,17 @@ class _EditTransactionDialogState extends State<EditTransactionDialog> {
               ),
               const SizedBox(height: 14),
               DropdownButtonFormField<String>(
-                value: category,
+                value: displayedCategory,
                 items: categories
-                    .map(
-                        (cat) => DropdownMenuItem(value: cat, child: Text(cat)))
+                    .map((cat) => DropdownMenuItem(
+                          value: cat,
+                          child: Text(cat),
+                        ))
                     .toList(),
                 onChanged: (val) =>
                     setState(() => category = val ?? categories.first),
                 decoration: InputDecoration(
-                  labelText: 'Category',
+                  labelText: AppLocalizations.of(context)!.category,
                   labelStyle: const TextStyle(color: AppColors.primaryText),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -129,7 +176,7 @@ class _EditTransactionDialogState extends State<EditTransactionDialog> {
               TextFormField(
                 initialValue: amount.toString(),
                 decoration: InputDecoration(
-                  labelText: 'Amount',
+                  labelText: AppLocalizations.of(context)!.amount,
                   labelStyle: const TextStyle(color: AppColors.primaryText),
                   prefixIcon:
                       const Icon(Icons.attach_money, color: AppColors.primary),
@@ -148,7 +195,7 @@ class _EditTransactionDialogState extends State<EditTransactionDialog> {
                 style: const TextStyle(color: AppColors.primaryText),
                 onChanged: (val) => amount = double.tryParse(val) ?? 0,
                 validator: (val) => (double.tryParse(val ?? '') ?? 0) <= 0
-                    ? 'Enter valid amount'
+                    ? AppLocalizations.of(context)!.enterValidAmount
                     : null,
               ),
               const SizedBox(height: 14),
@@ -179,7 +226,7 @@ class _EditTransactionDialogState extends State<EditTransactionDialog> {
                           size: 20, color: AppColors.primary),
                       const SizedBox(width: 10),
                       Text(
-                        'Pick Date: ${date.toLocal().toString().split(' ')[0]}',
+                        '${AppLocalizations.of(context)!.pickDate}: ${date.toLocal().toString().split(' ')[0]}',
                         style: const TextStyle(
                             fontSize: 15, color: AppColors.primaryText),
                       ),
@@ -198,19 +245,26 @@ class _EditTransactionDialogState extends State<EditTransactionDialog> {
             foregroundColor: AppColors.primary,
             textStyle: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         ElevatedButton(
           onPressed: () {
             if (_formKey.currentState!.validate()) {
+              final englishCategory = getEnglishCategory(
+                category,
+                type == 'Income' ? incomeEnglish : expenseEnglish,
+                type == 'Income' ? incomeLocalized : expenseLocalized,
+              );
+
               final updatedTx = TransactionModel(
                 id: widget.transaction.id,
                 type: type,
                 amount: amount,
-                category: category,
+                category: englishCategory,
                 date: date,
                 note: widget.transaction.note,
               );
+
               widget.transactionBox.put(widget.transactionKey, updatedTx);
               Navigator.pop(context);
             }
@@ -224,7 +278,7 @@ class _EditTransactionDialogState extends State<EditTransactionDialog> {
             ),
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           ),
-          child: const Text('Save'),
+          child: Text(AppLocalizations.of(context)!.saveButton),
         ),
       ],
     );
